@@ -586,6 +586,9 @@
 .ep-chart[data-chart="sparkline"] .ep-chart__canvas-wrap { height: 64px; margin-top: 10px; }
 .ep-chart[data-chart="sparkline"] { padding: 16px 18px 14px; }
 .ep-chart[data-chart="scatter"] .ep-chart__canvas-wrap { height: 360px; }
+/* Range bars run horizontally with named categories, so height follows the
+   number of rows rather than a fixed plot area. */
+.ep-chart[data-chart="range-bar"] .ep-chart__canvas-wrap { height: 300px; }
 .ep-chart canvas { display: block; }
 .ep-chart__source {
     margin: 14px 0 0;

@@ -380,6 +380,7 @@ export type ChartType =
     | 'line'
     | 'area'
     | 'bar'
+    | 'range-bar'
     | 'doughnut'
     | 'pie'
     | 'radar'
@@ -394,10 +395,14 @@ export interface ChartPoint {
     r?: number
 }
 
+/** A floating bar: [from, to]. Used by the range-bar type. */
+export type ChartRange = [number, number]
+
 export interface ChartSeries {
     label: string
-    /** Plain numbers for every type except scatter, which needs {x, y} pairs. */
-    values: number[] | ChartPoint[]
+    /** Plain numbers for most types; {x, y} pairs for scatter; [from, to]
+     *  pairs for range-bar. */
+    values: number[] | ChartPoint[] | ChartRange[]
     /** Override the themed series color. Leave unset in almost every case. */
     color?: string
 }
@@ -417,6 +422,8 @@ export interface ChartConfig {
     /** Scatter only — axis titles. A scatter plot without them is unreadable. */
     xLabel?: string
     yLabel?: string
+    /** range-bar only — unit appended in the tooltip, e.g. ' nights'. */
+    rangeUnit?: string
     /** Gauge only. `max` is the full sweep; `gaugeLabel` sits under the value. */
     max?: number
     gaugeLabel?: string

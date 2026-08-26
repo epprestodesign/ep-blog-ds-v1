@@ -87,6 +87,10 @@ export const CHARTS_RUNTIME = `
   function controllerFor(type) {
     if (type === "area" || type === "sparkline") return "line";
     if (type === "gauge") return "doughnut";
+    // A range bar is an ordinary bar whose data points are [from, to] pairs.
+    // Chart.js calls these floating bars and supports them natively, which is
+    // why this type needs no plugin and no commercial licence.
+    if (type === "range-bar") return "bar";
     return type;
   }
 
@@ -152,6 +156,9 @@ export const CHARTS_RUNTIME = `
         out.push({ label: series[i].label, data: [gv, Math.max(gmax - gv, 0)],
           backgroundColor: [c, alpha(c, 0.15)], borderWidth: 0, circumference: 180,
           rotation: 270, cutout: "72%" });
+      } else if (type === "range-bar") {
+        out.push({ label: series[i].label, data: series[i].values, backgroundColor: c,
+          borderRadius: 3, borderSkipped: false, maxBarThickness: 26 });
       } else if (type === "scatter") {
         out.push({ label: series[i].label, data: series[i].values, backgroundColor: c,
           borderColor: c, pointRadius: 5, pointHoverRadius: 7, showLine: false });
@@ -245,7 +252,10 @@ export const CHARTS_RUNTIME = `
         responsive: true,
         maintainAspectRatio: false,
         animation: reduceMotion ? false : { duration: 400 },
-        indexAxis: cfg.horizontal && type === "bar" ? "y" : "x",
+        // range-bar has to be included here: missing it left the chart
+        // vertical AND replaced the category names with indices, because the
+        // index axis and the category axis then disagreed about which is which.
+        indexAxis: (cfg.horizontal && (type === "bar" || type === "range-bar")) ? "y" : "x",
         interaction: { mode: "index", intersect: false },
         // One series needs no legend — the chart title already names it.
         plugins: {
@@ -269,7 +279,15 @@ export const CHARTS_RUNTIME = `
             bodyColor: tok(el, "--ep-chart-tooltip-text", "#ffffff"),
             titleFont: { size: 12, family: font, weight: "600" },
             bodyFont: { size: 12, family: font },
-            padding: 10, cornerRadius: 4, displayColors: true, boxPadding: 4
+            padding: 10, cornerRadius: 4, displayColors: true, boxPadding: 4,
+            callbacks: type === "range-bar" ? {
+              label: function (ctx) {
+                var v = ctx.raw;
+                if (!v || v.length !== 2) return ctx.formattedValue;
+                var u = cfg.rangeUnit || "";
+                return " " + ctx.dataset.label + ": " + fmtValue(v[0], u) + " to " + fmtValue(v[1], u);
+              }
+            } : undefined
           }
         },
         scales: scales(type, cfg, el, font)

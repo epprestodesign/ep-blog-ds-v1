@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ReactNode } from 'react'
 import { Shell } from '../components/story-shell'
 import { buildChartEmbed, type ChartConfig, type ChartType } from './builders'
 import { EmbedPlayground } from './embed-playground'
@@ -35,7 +36,7 @@ function ChartStory({
     args: any
     type: ChartType
     config: ChartConfig
-    intro: string
+    intro: ReactNode
 }) {
     return (
         <Shell title={args.title} intro={intro}>
@@ -207,6 +208,53 @@ export const Area: Story = {
             config={{
                 labels: SEASON,
                 series: [{ label: 'Room nights', values: [2100, 6900, 16100, 23500, 28600, 37400, 48600, 58200, 64500, 68400] }],
+            }}
+        />
+    ),
+}
+
+export const RangeBar: Story = {
+    name: 'Range bar',
+    args: {
+        title: 'Booking window by event type',
+        description: 'Earliest and latest reservation for each event type, in days before arrival. The bar is the spread, not a quantity.',
+        source: 'Source: EventPipe reservation data, 2025–2026 season',
+        mode: 'light',
+    },
+    render: (args: any) => (
+        <ChartStory
+            args={args}
+            type="range-bar"
+            intro={
+                <>
+                    Each bar spans a <strong>from</strong> and a <strong>to</strong> rather than
+                    rising from zero, so it shows a spread — a booking window, a rate range, a
+                    minimum and maximum stay. Horizontal suits it: the categories are names, and the
+                    eye compares spans left to right more easily than up and down.
+                    <br />
+                    <br />
+                    This is a <strong>Pro</strong> component in MUI X, so there is no reference
+                    chart beside it — but Chart.js draws floating bars natively, so the shipping
+                    version needs no licence and no plugin.
+                </>
+            }
+            config={{
+                labels: ['Youth sports', 'Trade show', 'Conference', 'Corporate meeting', 'Concert'],
+                series: [
+                    {
+                        label: 'Booking window',
+                        values: [
+                            [14, 96],
+                            [30, 210],
+                            [21, 168],
+                            [7, 62],
+                            [3, 45],
+                        ] as any,
+                    },
+                ],
+                horizontal: true,
+                rangeUnit: ' days',
+                valueSuffix: '',
             }}
         />
     ),
