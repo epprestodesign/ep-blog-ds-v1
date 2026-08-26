@@ -79,7 +79,7 @@ const preview: Preview = {
             'Typography',
           ],
           'Color Explorations',
-          ['Overview'],
+          ['Overview', "Justin's Exploration"],
           'Embed Kit',
           ['Webflow Setup', 'Content Style Guide', 'Components', 'Charts'],
           'Editorial',
