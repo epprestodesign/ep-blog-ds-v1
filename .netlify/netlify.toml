@@ -1,0 +1,41 @@
+redirectsOrigin = "config"
+plugins = []
+headers = []
+
+[functions]
+
+[functions."*"]
+
+[build]
+publish = "/Users/girardjustin/Documents/EVENTPIPE/Claude/ep-blog-ds-v1/storybook-static"
+publishOrigin = "config"
+commandOrigin = "config"
+command = "pnpm typecheck && pnpm build-storybook"
+
+[build.environment]
+NODE_VERSION = "22"
+STORYBOOK_DISABLE_TELEMETRY = "1"
+
+[build.processing]
+
+[build.processing.css]
+
+[build.processing.html]
+
+[build.processing.images]
+
+[build.processing.js]
+
+[build.services]
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]

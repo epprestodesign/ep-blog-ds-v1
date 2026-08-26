@@ -4,10 +4,10 @@ Foundations, editorial components and data visualizations for the EventPipe
 blog — authored in Storybook, shipped to a Webflow-hosted site as copy-paste
 embeds.
 
-### ▶ [Open the live Storybook →](https://epprestodesign.github.io/ep-blog-ds-v1/)
+### ▶ [Open the live Storybook →](https://epblog.netlify.app)
 
-Auto-deployed from GitHub Pages on every push to `main`. Locally:
-`pnpm storybook` → http://localhost:6008
+Auto-deployed from `main` on every push. Locally: `pnpm storybook` →
+http://localhost:6008
 
 ---
 
@@ -111,7 +111,19 @@ produces — everything that reaches the live blog does so through
 `src/webflow-embeds/`, as HTML pasted into Webflow or a stylesheet linked from
 this repo.
 
-Storybook auto-deploys to
-**[epprestodesign.github.io/ep-blog-ds-v1](https://epprestodesign.github.io/ep-blog-ds-v1/)**
-on every push to `main`. The same workflow purges the jsDelivr cache for
-`blog-embeds.css`, so a restyle reaches the live Webflow blog in the same run.
+### Deployment
+
+Storybook publishes to **[epblog.netlify.app](https://epblog.netlify.app)** on
+every push to `main`, built by [`netlify.toml`](netlify.toml).
+
+A second pipeline,
+[`.github/workflows/deploy-storybook.yml`](.github/workflows/deploy-storybook.yml),
+mirrors the same build to GitHub Pages at
+[epprestodesign.github.io/ep-blog-ds-v1](https://epprestodesign.github.io/ep-blog-ds-v1/).
+It exists for one reason beyond hosting: it purges the jsDelivr cache for
+`blog-embeds.css`, so a restyle reaches the live Webflow blog within seconds of
+a merge rather than at the end of jsDelivr's 12-hour TTL.
+
+> **Two hosts publish this site.** Netlify is canonical — it is the URL in the
+> repo description and the one to share. Keep the two build definitions in step:
+> if you change the command or publish directory in one, change it in the other.
