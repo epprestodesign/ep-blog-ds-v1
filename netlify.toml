@@ -1,0 +1,27 @@
+# Netlify build config.
+#
+# This file overrides whatever is set in the Netlify UI, so the build lives in
+# version control rather than in a settings panel. Netlify's auto-detection
+# guessed `vite build` → `dist`, which is wrong for this repo: there is no
+# application build here. Storybook is the only surface, and it publishes to
+# storybook-static.
+#
+# Mirrors .github/workflows/deploy-storybook.yml so both pipelines produce an
+# identical site. If you change one, change the other.
+
+[build]
+  command = "pnpm typecheck && pnpm build-storybook"
+  publish = "storybook-static"
+
+[build.environment]
+  NODE_VERSION = "22"
+  STORYBOOK_DISABLE_TELEMETRY = "1"
+
+# Storybook is a single-page app: deep links like /?path=/story/... resolve at
+# the root, but a direct hit on an unknown path should serve the app shell
+# rather than a 404. Netlify only applies this when no real file matches, so
+# built assets and iframe.html still serve normally.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
