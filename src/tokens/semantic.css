@@ -1,0 +1,250 @@
+/* =============================================================
+   Tier 2 — SEMANTIC ROLES
+   Everything downstream (components, embeds, charts) consumes ONLY
+   these. Never reach past this file into a Tier 1 --ep-palette-*.
+
+   Four themes, selected by two attributes on <html> (or on any
+   subtree — the blog embeds scope them to `.ep-blog`):
+
+     data-ep-brand = "marketing" (default) | "product"
+     data-ep-mode  = "light" (default)     | "dark"
+
+   marketing → Midnight + Teal, editorial type. The blog's own voice.
+   product   → Azure + Graphite, Product Sans. Matches the admin
+               platform, for posts that embed real product UI.
+
+   Selectors are written out in full rather than relying on source
+   order, so brand+mode combinations resolve deterministically.
+   ============================================================= */
+
+/* -------------------------------------------------------------
+   MARKETING · LIGHT  (default)
+   ------------------------------------------------------------- */
+:root {
+  --ep-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ep-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ep-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Surface */
+  --ep-color-canvas: #F4F7F9;
+  --ep-color-surface: #FFFFFF;
+  --ep-color-surface-sunken: #EDF2F5;
+  --ep-color-surface-inset: #FFFFFF;
+  --ep-color-surface-hover: var(--ep-palette-midnight-50);
+
+  /* Text */
+  --ep-color-text: #10163E;
+  --ep-color-text-subtle: #66738F;
+  --ep-color-text-subtlest: #8C97AE;
+  --ep-color-text-inverse: #FFFFFF;
+  --ep-color-text-accent: #018E93;
+
+  /* Line */
+  --ep-color-border: #D2DBE5;
+  --ep-color-border-subtle: #E3EAF1;
+  --ep-color-border-bold: #B4C2D1;
+  --ep-color-border-accent: var(--ep-palette-brand-600);
+
+  /* Accent — the teal that carries eyebrows, rules, active states */
+  --ep-color-accent: #00ADB3;
+  --ep-color-accent-hover: #018E93;
+  --ep-color-accent-contrast: #FFFFFF;
+  --ep-color-accent-wash: var(--ep-palette-brand-50);
+
+  /* Link */
+  --ep-color-link: #018E93;
+  --ep-color-link-hover: #036F73;
+
+  /* Status */
+  --ep-color-success: var(--ep-palette-green-700);
+  --ep-color-warning: var(--ep-palette-yellow-700);
+  --ep-color-danger: var(--ep-palette-red-600);
+  --ep-color-info: var(--ep-palette-harbor-600);
+  --ep-color-success-wash: var(--ep-palette-green-50);
+  --ep-color-warning-wash: var(--ep-palette-amber-50);
+  --ep-color-danger-wash: var(--ep-palette-red-50);
+  --ep-color-info-wash: var(--ep-palette-harbor-50);
+
+  /* Focus */
+  --ep-color-focus: #00ADB3;
+
+  /* Data visualization — ordered categorical series. Ordered by how
+     well each reads against this theme's canvas, not by hue family,
+     so a 2-series chart gets the strongest pair available. */
+  --ep-chart-1: #00ADB3;
+  --ep-chart-2: #093E60;
+  --ep-chart-3: #DC438C;
+  --ep-chart-4: #F79009;
+  --ep-chart-5: #515F94;
+  --ep-chart-6: #7A5AF8;
+  --ep-chart-7: #15B7F0;
+  --ep-chart-8: #0A9A9B;
+  --ep-chart-grid: #D2DBE5;
+  --ep-chart-axis: #8C97AE;
+  --ep-chart-label: #66738F;
+  --ep-chart-tooltip-bg: #10163E;
+  --ep-chart-tooltip-text: #FFFFFF;
+}
+
+/* -------------------------------------------------------------
+   MARKETING · DARK — the register the reference visualizations use
+   ------------------------------------------------------------- */
+:root[data-ep-mode='dark'],
+:root[data-ep-brand='marketing'][data-ep-mode='dark'] {
+  --ep-color-canvas: #10163E;
+  --ep-color-surface: #161D46;
+  --ep-color-surface-sunken: #080B24;
+  --ep-color-surface-inset: #093E60;
+  --ep-color-surface-hover: #1D2650;
+
+  --ep-color-text: #FFFFFF;
+  --ep-color-text-subtle: #94A3B8;
+  --ep-color-text-subtlest: #6B7A99;
+  --ep-color-text-inverse: #10163E;
+  --ep-color-text-accent: #00ADB3;
+
+  --ep-color-border: #232C57;
+  --ep-color-border-subtle: #1A2047;
+  --ep-color-border-bold: #2E3866;
+  --ep-color-border-accent: #00ADB3;
+
+  --ep-color-accent: #00ADB3;
+  --ep-color-accent-hover: #22C2C6;
+  --ep-color-accent-contrast: #10163E;
+  --ep-color-accent-wash: rgba(0, 173, 179, 0.12);
+
+  --ep-color-link: #56D2D5;
+  --ep-color-link-hover: #8FE1E3;
+
+  --ep-color-success: var(--ep-palette-green-400);
+  --ep-color-warning: var(--ep-palette-amber-400);
+  --ep-color-danger: var(--ep-palette-red-400);
+  --ep-color-info: var(--ep-palette-harbor-300);
+  --ep-color-success-wash: rgba(74, 222, 128, 0.12);
+  --ep-color-warning-wash: rgba(251, 191, 36, 0.12);
+  --ep-color-danger-wash: rgba(248, 113, 113, 0.12);
+  --ep-color-info-wash: rgba(95, 161, 196, 0.12);
+
+  --ep-color-focus: #00ADB3;
+
+  --ep-chart-1: #00ADB3;
+  --ep-chart-2: #56D2D5;
+  --ep-chart-3: #DC438C;
+  --ep-chart-4: #FBBF24;
+  --ep-chart-5: #7B87B4;
+  --ep-chart-6: #A78BFA;
+  --ep-chart-7: #38BDF8;
+  --ep-chart-8: #8FE1E3;
+  --ep-chart-grid: #232C57;
+  --ep-chart-axis: #6B7A99;
+  --ep-chart-label: #94A3B8;
+  --ep-chart-tooltip-bg: #093E60;
+  --ep-chart-tooltip-text: #FFFFFF;
+}
+
+/* -------------------------------------------------------------
+   PRODUCT · LIGHT — mirrors eventpipe-prototype-ds
+   ------------------------------------------------------------- */
+:root[data-ep-brand='product'] {
+  --ep-font-display: 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ep-font-sans: 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --ep-color-canvas: #F6F7F8;
+  --ep-color-surface: #FFFFFF;
+  --ep-color-surface-sunken: var(--ep-palette-graphite-100);
+  --ep-color-surface-inset: #FFFFFF;
+  --ep-color-surface-hover: var(--ep-palette-graphite-50);
+
+  --ep-color-text: #212529;
+  --ep-color-text-subtle: #6C757D;
+  --ep-color-text-subtlest: #8C92A0;
+  --ep-color-text-inverse: #FFFFFF;
+  --ep-color-text-accent: #2561FA;
+
+  --ep-color-border: var(--ep-palette-graphite-200);
+  --ep-color-border-subtle: #DFDFDF;
+  --ep-color-border-bold: var(--ep-palette-graphite-400);
+  --ep-color-border-accent: #2561FA;
+
+  --ep-color-accent: #2561FA;
+  --ep-color-accent-hover: var(--ep-palette-azure-700);
+  --ep-color-accent-contrast: #FFFFFF;
+  --ep-color-accent-wash: var(--ep-palette-azure-50);
+
+  --ep-color-link: #2561FA;
+  --ep-color-link-hover: var(--ep-palette-azure-800);
+
+  --ep-color-info: var(--ep-palette-blue-600);
+  --ep-color-info-wash: var(--ep-palette-blue-50);
+
+  --ep-color-focus: #2561FA;
+
+  --ep-chart-1: #2561FA;
+  --ep-chart-2: #15AEB3;
+  --ep-chart-3: #00123D;
+  --ep-chart-4: #F79009;
+  --ep-chart-5: #7A5AF8;
+  --ep-chart-6: #DC438C;
+  --ep-chart-7: #15B7F0;
+  --ep-chart-8: #6F7583;
+  --ep-chart-grid: var(--ep-palette-graphite-200);
+  --ep-chart-axis: var(--ep-palette-graphite-500);
+  --ep-chart-label: #6C757D;
+  --ep-chart-tooltip-bg: #00123D;
+  --ep-chart-tooltip-text: #FFFFFF;
+}
+
+/* -------------------------------------------------------------
+   PRODUCT · DARK
+   ------------------------------------------------------------- */
+:root[data-ep-brand='product'][data-ep-mode='dark'] {
+  --ep-color-canvas: var(--ep-palette-navy-950);
+  --ep-color-surface: var(--ep-palette-navy-900);
+  --ep-color-surface-sunken: #020714;
+  --ep-color-surface-inset: var(--ep-palette-navy-800);
+  --ep-color-surface-hover: var(--ep-palette-navy-800);
+
+  --ep-color-text: #FFFFFF;
+  --ep-color-text-subtle: var(--ep-palette-graphite-400);
+  --ep-color-text-subtlest: var(--ep-palette-graphite-500);
+  --ep-color-text-inverse: var(--ep-palette-navy-950);
+  --ep-color-text-accent: var(--ep-palette-azure-300);
+
+  --ep-color-border: var(--ep-palette-navy-700);
+  --ep-color-border-subtle: var(--ep-palette-navy-800);
+  --ep-color-border-bold: var(--ep-palette-navy-600);
+  --ep-color-border-accent: var(--ep-palette-azure-400);
+
+  --ep-color-accent: var(--ep-palette-azure-400);
+  --ep-color-accent-hover: var(--ep-palette-azure-300);
+  --ep-color-accent-contrast: var(--ep-palette-navy-950);
+  --ep-color-accent-wash: rgba(69, 147, 224, 0.14);
+
+  --ep-color-link: var(--ep-palette-azure-300);
+  --ep-color-link-hover: var(--ep-palette-azure-200);
+
+  --ep-color-success: var(--ep-palette-green-400);
+  --ep-color-warning: var(--ep-palette-amber-400);
+  --ep-color-danger: var(--ep-palette-red-400);
+  --ep-color-info: var(--ep-palette-blue-300);
+  --ep-color-success-wash: rgba(74, 222, 128, 0.12);
+  --ep-color-warning-wash: rgba(251, 191, 36, 0.12);
+  --ep-color-danger-wash: rgba(248, 113, 113, 0.12);
+  --ep-color-info-wash: rgba(147, 197, 253, 0.12);
+
+  --ep-color-focus: var(--ep-palette-azure-400);
+
+  --ep-chart-1: #4593E0;
+  --ep-chart-2: #2DD4BF;
+  --ep-chart-3: #7C8DBE;
+  --ep-chart-4: #FBBF24;
+  --ep-chart-5: #A78BFA;
+  --ep-chart-6: #F472B6;
+  --ep-chart-7: #38BDF8;
+  --ep-chart-8: #A6ABB6;
+  --ep-chart-grid: var(--ep-palette-navy-700);
+  --ep-chart-axis: var(--ep-palette-graphite-600);
+  --ep-chart-label: var(--ep-palette-graphite-400);
+  --ep-chart-tooltip-bg: var(--ep-palette-navy-800);
+  --ep-chart-tooltip-text: #FFFFFF;
+}

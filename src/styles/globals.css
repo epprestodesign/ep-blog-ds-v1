@@ -1,0 +1,22 @@
+@import './typography.css';
+@import './theme.css';
+
+html {
+  color-scheme: light;
+}
+html[data-ep-mode='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--ep-color-canvas);
+  color: var(--ep-color-text);
+  font-family: var(--ep-font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ep-color-focus);
+  outline-offset: 2px;
+}

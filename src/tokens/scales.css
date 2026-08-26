@@ -1,0 +1,86 @@
+/* =============================================================
+   SCALES — spacing, radius, type, elevation, motion.
+   Brand-independent: these hold their values across every theme,
+   so switching brand or mode never reflows a layout.
+
+   Spacing / radius / motion are ported from the EventPipe product
+   design system (eventpipe-prototype-ds/src/css/tokens.scss). The
+   type scale is NOT — long-form reading wants a wider range than a
+   dense admin UI does, so it is defined fresh below.
+   ============================================================= */
+:root {
+
+  /* --- Spacing ------------------------------------------------ */
+  --ep-space-1: 4px;
+  --ep-space-2: 8px;
+  --ep-space-3: 12px;
+  --ep-space-4: 16px;
+  --ep-space-5: 24px;
+  --ep-space-6: 32px;
+  --ep-space-7: 48px;
+  --ep-space-8: 64px;
+  --ep-space-9: 96px;
+
+  /* --- Radius ------------------------------------------------- */
+  /* The product DS is a uniform 4px system. The blog keeps 4px for
+     controls and small chips so the two feel related, but allows a
+     larger card radius — editorial cards read better with more. */
+  --ep-radius-sm: 4px;
+  --ep-radius-md: 6px;
+  --ep-radius-lg: 12px;
+  --ep-radius-xl: 16px;
+  --ep-radius-pill: 999px;
+  --ep-radius-control: 4px;
+
+  /* --- Type scale --------------------------------------------- */
+  /* Fluid where it helps (display / h1), fixed below that so body
+     copy stays at a predictable measure. */
+  --ep-text-display: clamp(2.25rem, 5vw, 3.5rem);
+  --ep-text-h1: clamp(1.875rem, 4vw, 2.5rem);
+  --ep-text-h2: 1.875rem;
+  --ep-text-h3: 1.5rem;
+  --ep-text-h4: 1.25rem;
+  --ep-text-h5: 1.0625rem;
+  --ep-text-lead: 1.1875rem;
+  --ep-text-body: 1.0625rem;   /* 17px — long-form reading size */
+  --ep-text-sm: 0.875rem;
+  --ep-text-xs: 0.75rem;
+  --ep-text-eyebrow: 0.5625rem; /* 9px, always paired with .18em tracking */
+
+  --ep-leading-tight: 1.08;
+  --ep-leading-heading: 1.2;
+  --ep-leading-body: 1.7;
+  --ep-leading-ui: 1.5;
+
+  --ep-tracking-tight: -0.02em;
+  --ep-tracking-heading: -0.01em;
+  --ep-tracking-normal: 0;
+  --ep-tracking-eyebrow: 0.18em;
+
+  --ep-weight-regular: 400;
+  --ep-weight-medium: 500;
+  --ep-weight-semibold: 600;
+  --ep-weight-bold: 700;
+
+  /* Measure — the reference visualizations cap prose at 62ch. */
+  --ep-measure: 62ch;
+  --ep-container: 1180px;
+
+  /* --- Elevation ---------------------------------------------- */
+  --ep-shadow-1: 0 1px 2px rgba(16, 22, 62, 0.08);
+  --ep-shadow-2: 0 4px 12px rgba(16, 22, 62, 0.12);
+  --ep-shadow-3: 0 8px 24px rgba(16, 22, 62, 0.16);
+  --ep-shadow-4: 0 16px 40px rgba(16, 22, 62, 0.20);
+  --ep-shadow-card: 0 0 14px 0.4px rgba(16, 22, 62, 0.08);
+
+  /* --- Motion ------------------------------------------------- */
+  --ep-duration-instant: 80ms;
+  --ep-duration-fast: 150ms;
+  --ep-duration-base: 240ms;
+  --ep-duration-slow: 400ms;
+
+  --ep-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ep-ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
+  --ep-ease-decelerate: cubic-bezier(0, 0, 0, 1);
+  --ep-ease-accelerate: cubic-bezier(0.3, 0, 1, 1);
+}

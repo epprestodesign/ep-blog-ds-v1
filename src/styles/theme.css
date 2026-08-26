@@ -1,0 +1,69 @@
+/* =============================================================
+   Tailwind v4 bridge.
+   Maps the EventPipe tokens into Tailwind's theme namespace so the
+   Storybook-side React work can use `bg-canvas`, `text-subtle`,
+   `font-display` etc.
+
+   Every value here is `var(--ep-*)`, NOT a hex — Tailwind inlines the
+   reference rather than the resolved color, so utilities keep tracking
+   the live theme when data-ep-brand / data-ep-mode change.
+
+   Nothing in src/webflow-embeds/ may depend on this file. That layer
+   ships to Webflow, where Tailwind does not exist.
+   ============================================================= */
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@import '../tokens/index.css';
+
+@theme inline {
+  --color-canvas: var(--ep-color-canvas);
+  --color-surface: var(--ep-color-surface);
+  --color-surface-sunken: var(--ep-color-surface-sunken);
+  --color-surface-inset: var(--ep-color-surface-inset);
+  --color-surface-hover: var(--ep-color-surface-hover);
+
+  --color-ink: var(--ep-color-text);
+  --color-subtle: var(--ep-color-text-subtle);
+  --color-subtlest: var(--ep-color-text-subtlest);
+  --color-inverse: var(--ep-color-text-inverse);
+
+  --color-line: var(--ep-color-border);
+  --color-line-subtle: var(--ep-color-border-subtle);
+  --color-line-bold: var(--ep-color-border-bold);
+
+  --color-accent: var(--ep-color-accent);
+  --color-accent-hover: var(--ep-color-accent-hover);
+  --color-accent-contrast: var(--ep-color-accent-contrast);
+  --color-accent-wash: var(--ep-color-accent-wash);
+
+  --color-success: var(--ep-color-success);
+  --color-warning: var(--ep-color-warning);
+  --color-danger: var(--ep-color-danger);
+  --color-info: var(--ep-color-info);
+
+  --color-chart-1: var(--ep-chart-1);
+  --color-chart-2: var(--ep-chart-2);
+  --color-chart-3: var(--ep-chart-3);
+  --color-chart-4: var(--ep-chart-4);
+  --color-chart-5: var(--ep-chart-5);
+  --color-chart-6: var(--ep-chart-6);
+  --color-chart-7: var(--ep-chart-7);
+  --color-chart-8: var(--ep-chart-8);
+
+  --font-display: var(--ep-font-display);
+  --font-sans: var(--ep-font-sans);
+  --font-mono: var(--ep-font-mono);
+
+  --radius-sm: var(--ep-radius-sm);
+  --radius-md: var(--ep-radius-md);
+  --radius-lg: var(--ep-radius-lg);
+  --radius-xl: var(--ep-radius-xl);
+
+  --shadow-card: var(--ep-shadow-card);
+  --shadow-1: var(--ep-shadow-1);
+  --shadow-2: var(--ep-shadow-2);
+  --shadow-3: var(--ep-shadow-3);
+
+  --container-measure: var(--ep-measure);
+  --container-page: var(--ep-container);
+}

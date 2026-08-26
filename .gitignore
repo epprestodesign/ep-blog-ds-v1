@@ -1,0 +1,8 @@
+node_modules/
+dist/
+storybook-static/
+.DS_Store
+*.log
+
+# TypeScript incremental build state
+*.tsbuildinfo

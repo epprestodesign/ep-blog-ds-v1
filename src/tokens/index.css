@@ -1,0 +1,5 @@
+/* Canonical token entry point. Order matters: primitives, then the
+   scales that never change per theme, then the semantic roles that do. */
+@import './palette.css';
+@import './scales.css';
+@import './semantic.css';

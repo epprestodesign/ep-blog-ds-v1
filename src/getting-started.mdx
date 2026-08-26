@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Getting Started" />
+
+# EventPipe Blog Design System
+
+Foundations, editorial components and data visualizations for the EventPipe
+blog — authored here, shipped to Webflow as copy-paste embeds.
+
+---
+
+## How this reaches Webflow
+
+Webflow renders static HTML, CSS and JavaScript. There is no React runtime on
+the page. So this repo is split in two, and only one half ships:
+
+| | What it is | Where it runs |
+|---|---|---|
+| **Authoring layer** | React + Tailwind + Storybook | Here only. Never ships. |
+| **Shipping layer** | `src/webflow-embeds/` — one stylesheet, one chart runtime, and functions that emit HTML strings | Webflow |
+
+Every playground in **Embed Kit** previews a component by rendering the exact
+string its Copy button puts on your clipboard. The preview and the production
+output cannot disagree, because they are the same string.
+
+---
+
+## The three lanes
+
+Not everything should be an embed. Pick the lane by how the thing is used, not
+by how complicated it looks.
+
+**1 · Native Webflow.** Article cards, the directory grid, nav, footers, the
+post header. Build these in the Designer with the class names from the
+foundations here. They stay editable by people who do not write code, and they
+bind to CMS fields.
+
+**2 · Embed Kit.** Callouts, pull quotes, metric rows, tables, checklists, FAQs
+and charts. Copy from a playground, paste into a Rich Text → Custom Code block.
+Use this lane when a writer needs to drop the component mid-article.
+
+**3 · Bespoke editorial.** One flagship visualization per major piece,
+hand-authored as a self-contained HTML file. See **Editorial**.
+
+Anything shipped as an embed becomes uneditable in the Designer. That is the
+cost of lane 2, and it is why lane 1 exists.
+
+---
+
+## Setup
+
+Three one-time pastes into Webflow, then you never touch it again — publishing
+a new component becomes a merge to `main`. See **Embed Kit → Webflow Setup**.
+
+---
+
+## Brands
+
+Two foundations, switched by attribute:
+
+- **Marketing** — Midnight and Teal, Fraunces over Inter. The blog's own voice,
+  and the default.
+- **Product** — Azure and Graphite, Product Sans. Ported from
+  `eventpipe-prototype-ds`, for posts that embed real admin-platform UI.
+
+Both run light and dark. Use the **Brand** and **Mode** toolbar controls to
+check any story in all four.
+
+---
+
+## Local development
+
+```bash
+pnpm install
+pnpm storybook        # http://localhost:6008
+pnpm build-storybook
+```

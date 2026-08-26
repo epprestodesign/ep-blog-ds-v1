@@ -1,0 +1,688 @@
+/**
+ * EventPipe Blog — Webflow embed stylesheet
+ * =========================================
+ * Link this ONCE from Webflow (Site Settings → Custom Code → Head):
+ *
+ *   <link rel="stylesheet"
+ *     href="https://cdn.jsdelivr.net/gh/epprestodesign/ep-blog-ds-v1@main/src/webflow-embeds/blog-embeds.css">
+ *
+ * Every component embed you paste into a Rich Text "Custom Code" block
+ * references the namespaced `.ep-*` classes below, so the markup you paste
+ * stays small and restyling the whole blog is a merge to main, not 400 edits
+ * in the Designer. The deploy workflow purges the jsDelivr cache on merge.
+ *
+ * SCOPING CONTRACT
+ * Nothing here applies outside `.ep-blog`, including the custom properties —
+ * they are declared on `.ep-blog`, not `:root`. That means this file cannot
+ * collide with the EventPipe marketing site's own styles or variables no
+ * matter what it defines.
+ *
+ * Values mirror src/tokens/semantic.css. That file is the source of truth for
+ * the design system; this file is a resolved, self-contained copy for a
+ * runtime where the rest of the token layer does not exist.
+ */
+
+/* =====================================================================
+   Scoped tokens
+   `.ep-blog` = marketing light. Add data-ep-mode="dark" for the dark
+   editorial register. Add data-ep-brand="product" for posts embedding
+   real admin-platform UI.
+===================================================================== */
+.ep-blog {
+    --ep-font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --ep-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --ep-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --ep-canvas: #f4f7f9;
+    --ep-surface: #ffffff;
+    --ep-sunken: #edf2f5;
+    --ep-text: #10163e;
+    --ep-subtle: #66738f;
+    --ep-subtlest: #8c97ae;
+    --ep-inverse: #ffffff;
+    --ep-border: #d2dbe5;
+    --ep-border-subtle: #e3eaf1;
+    --ep-accent: #00adb3;
+    --ep-accent-ink: #018e93;
+    --ep-accent-wash: #e6f8f8;
+    --ep-accent-contrast: #ffffff;
+
+    --ep-harbor: #093e60;
+    --ep-harbor-wash: #eaf2f8;
+    --ep-amber: #b45309;
+    --ep-amber-wash: #fffbeb;
+
+    --ep-chart-1: #00adb3;
+    --ep-chart-2: #093e60;
+    --ep-chart-3: #dc438c;
+    --ep-chart-4: #f79009;
+    --ep-chart-5: #515f94;
+    --ep-chart-6: #7a5af8;
+    --ep-chart-grid: #d2dbe5;
+    --ep-chart-label: #66738f;
+
+    --ep-radius: 4px;
+    --ep-radius-lg: 12px;
+}
+
+.ep-blog[data-ep-mode="dark"] {
+    --ep-canvas: #10163e;
+    --ep-surface: #161d46;
+    --ep-sunken: #080b24;
+    --ep-text: #ffffff;
+    --ep-subtle: #94a3b8;
+    --ep-subtlest: #6b7a99;
+    --ep-inverse: #10163e;
+    --ep-border: #232c57;
+    --ep-border-subtle: #1a2047;
+    --ep-accent: #00adb3;
+    --ep-accent-ink: #56d2d5;
+    --ep-accent-wash: rgba(0, 173, 179, 0.12);
+    --ep-accent-contrast: #10163e;
+
+    --ep-harbor: #5fa1c4;
+    --ep-harbor-wash: rgba(95, 161, 196, 0.12);
+    --ep-amber: #fbbf24;
+    --ep-amber-wash: rgba(251, 191, 36, 0.12);
+
+    --ep-chart-2: #56d2d5;
+    --ep-chart-4: #fbbf24;
+    --ep-chart-5: #7b87b4;
+    --ep-chart-6: #a78bfa;
+    --ep-chart-grid: #232c57;
+    --ep-chart-label: #94a3b8;
+}
+
+.ep-blog[data-ep-brand="product"] {
+    --ep-font-display: "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --ep-font-sans: "Product Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --ep-canvas: #f6f7f8;
+    --ep-text: #212529;
+    --ep-subtle: #6c757d;
+    --ep-border: #dadde2;
+    --ep-border-subtle: #dfdfdf;
+    --ep-accent: #2561fa;
+    --ep-accent-ink: #2561fa;
+    --ep-accent-wash: #e8f1fb;
+    --ep-chart-1: #2561fa;
+    --ep-chart-2: #15aeb3;
+}
+
+/* =====================================================================
+   Base
+===================================================================== */
+.ep-blog {
+    font-family: var(--ep-font-sans);
+    color: var(--ep-text);
+    -webkit-font-smoothing: antialiased;
+}
+.ep-blog *,
+.ep-blog *::before,
+.ep-blog *::after {
+    box-sizing: border-box;
+}
+
+/* Webflow ships `.w-richtext figure { max-width: 60% }`. Embeds built on
+   <figure> (callout, quote, figure) must fill the content column instead. */
+.ep-blog figure,
+.w-richtext .ep-blog figure {
+    max-width: 100%;
+    margin: 0;
+}
+
+/* Visually hidden, still announced. The table's check/cross column needs a
+   real text alternative next to its decorative icon. */
+.ep-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.ep-eyebrow {
+    display: block;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ep-accent-ink);
+    margin: 0 0 9px;
+}
+
+/* =====================================================================
+   Metrics row  —  .ep-metrics
+   The lead statistic strip. Mirrors the `.lead` band in the reference
+   visualizations: hairline rules top and bottom, tabular numerals.
+===================================================================== */
+.ep-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 30px;
+    margin: 32px 0;
+    padding: 16px 0;
+    border-top: 1px solid var(--ep-border);
+    border-bottom: 1px solid var(--ep-border);
+}
+@media (min-width: 700px) {
+    .ep-metrics[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
+    .ep-metrics[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 520px) {
+    .ep-metrics { grid-template-columns: 1fr; }
+}
+.ep-metric__value {
+    display: block;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ep-text);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+}
+.ep-metric__value[data-accent="teal"] { color: var(--ep-accent-ink); }
+.ep-metric__label {
+    display: block;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--ep-subtle);
+}
+
+/* =====================================================================
+   Pull quote  —  .ep-quote
+===================================================================== */
+.ep-quote {
+    margin: 36px 0;
+    padding: 0 0 0 24px;
+    border-left: 3px solid var(--ep-accent);
+}
+.ep-quote--centered {
+    border-left: 0;
+    padding: 28px 0 0;
+    border-top: 1px solid var(--ep-border);
+    text-align: center;
+}
+.ep-quote__text {
+    font-family: var(--ep-font-display);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    color: var(--ep-text);
+    margin: 0;
+}
+.ep-quote__attribution {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+}
+.ep-quote--centered .ep-quote__attribution { justify-content: center; }
+.ep-quote__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    object-fit: cover;
+    flex: none;
+    background: var(--ep-accent-wash);
+    color: var(--ep-accent-ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.ep-quote__name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ep-text);
+}
+.ep-quote__role {
+    display: block;
+    font-size: 12px;
+    color: var(--ep-subtle);
+    margin-top: 1px;
+}
+
+/* =====================================================================
+   Callout  —  .ep-callout
+   data-accent = teal (default) | harbor | amber
+===================================================================== */
+.ep-callout {
+    display: flex;
+    gap: 14px;
+    margin: 28px 0;
+    padding: 18px 20px;
+    border-radius: var(--ep-radius-lg);
+    background: var(--ep-accent-wash);
+    border: 1px solid transparent;
+}
+.ep-callout[data-accent="harbor"] { background: var(--ep-harbor-wash); }
+.ep-callout[data-accent="amber"] { background: var(--ep-amber-wash); }
+.ep-callout__icon {
+    width: 20px;
+    height: 20px;
+    flex: none;
+    margin-top: 1px;
+    color: var(--ep-accent-ink);
+}
+.ep-callout[data-accent="harbor"] .ep-callout__icon { color: var(--ep-harbor); }
+.ep-callout[data-accent="amber"] .ep-callout__icon { color: var(--ep-amber); }
+.ep-callout__body { min-width: 0; }
+.ep-callout__title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 4px;
+    color: var(--ep-text);
+}
+.ep-callout__text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--ep-text);
+}
+.ep-callout__text + .ep-callout__text { margin-top: 8px; }
+
+/* =====================================================================
+   Editorial table  —  .ep-table
+   Scrolls inside its own container so a wide table never forces the
+   article body to scroll sideways on mobile.
+===================================================================== */
+.ep-table-wrap {
+    margin: 32px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.ep-table {
+    width: 100%;
+    min-width: 480px;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.ep-table caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 12px;
+    color: var(--ep-subtle);
+    padding-bottom: 10px;
+}
+.ep-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ep-subtle);
+    padding: 0 14px 9px 0;
+    border-bottom: 1px solid var(--ep-border);
+    white-space: nowrap;
+}
+.ep-table td {
+    padding: 11px 14px 11px 0;
+    border-bottom: 1px solid var(--ep-border-subtle);
+    line-height: 1.5;
+    color: var(--ep-text);
+}
+.ep-table th:last-child,
+.ep-table td:last-child { padding-right: 0; }
+.ep-table td[data-type="num"] {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+.ep-table th[data-type="num"] { text-align: right; padding-right: 0; }
+.ep-table td[data-type="muted"] { color: var(--ep-subtle); }
+.ep-table td[data-type="bold"] { font-weight: 600; }
+.ep-table__pill {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 500;
+    background: var(--ep-sunken);
+    color: var(--ep-subtle);
+}
+.ep-table__pill[data-accent="teal"] {
+    background: var(--ep-accent-wash);
+    color: var(--ep-accent-ink);
+}
+.ep-table__pill[data-accent="harbor"] {
+    background: var(--ep-harbor-wash);
+    color: var(--ep-harbor);
+}
+.ep-table__icon { width: 16px; height: 16px; vertical-align: -3px; }
+.ep-table__icon--check { color: var(--ep-accent-ink); }
+.ep-table__icon--cross { color: var(--ep-subtlest); }
+
+/* =====================================================================
+   Checklist  —  .ep-checklist
+===================================================================== */
+.ep-checklist {
+    margin: 28px 0;
+    padding: 20px 22px;
+    border: 1px solid var(--ep-border);
+    border-radius: var(--ep-radius-lg);
+    background: var(--ep-surface);
+}
+.ep-checklist__heading {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: var(--ep-text);
+}
+.ep-checklist__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+}
+.ep-checklist__item {
+    display: flex;
+    gap: 10px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ep-text);
+}
+.ep-checklist__icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    margin-top: 2px;
+    color: var(--ep-accent-ink);
+}
+
+/* =====================================================================
+   Numbered steps  —  .ep-steps
+   Counters ramp through the teal scale so a long list reads as a
+   sequence rather than ten identical bullets.
+===================================================================== */
+.ep-steps {
+    list-style: none;
+    counter-reset: ep-step;
+    margin: 30px 0;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+}
+.ep-steps__item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+.ep-steps__num {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    background: var(--ep-accent);
+    font-variant-numeric: tabular-nums;
+}
+.ep-steps__title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 2px 0 3px;
+    color: var(--ep-text);
+}
+.ep-steps__text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--ep-subtle);
+}
+
+/* =====================================================================
+   FAQ  —  .ep-faq
+   Native <details>, so it works with zero JavaScript in Webflow and
+   stays keyboard-accessible and findable by in-page search.
+===================================================================== */
+.ep-faq {
+    margin: 32px 0;
+    border-top: 1px solid var(--ep-border);
+}
+.ep-faq__item {
+    border-bottom: 1px solid var(--ep-border);
+}
+.ep-faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ep-text);
+    list-style: none;
+}
+.ep-faq__q::-webkit-details-marker { display: none; }
+.ep-faq__icon {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    color: var(--ep-subtle);
+    transition: transform 240ms cubic-bezier(0.2, 0, 0, 1);
+}
+.ep-faq__item[open] .ep-faq__icon { transform: rotate(45deg); }
+.ep-faq__a {
+    padding: 0 0 18px;
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ep-subtle);
+    margin: 0;
+    max-width: 62ch;
+}
+
+/* =====================================================================
+   Tags  —  .ep-tags
+===================================================================== */
+.ep-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0;
+    padding: 0;
+    list-style: none;
+}
+.ep-tag {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--ep-sunken);
+    color: var(--ep-subtle);
+    border: 1px solid transparent;
+}
+.ep-tag[data-accent="teal"] {
+    background: var(--ep-accent-wash);
+    color: var(--ep-accent-ink);
+}
+.ep-tag[data-accent="harbor"] {
+    background: var(--ep-harbor-wash);
+    color: var(--ep-harbor);
+}
+
+/* =====================================================================
+   Figure  —  .ep-figure
+===================================================================== */
+.ep-figure { margin: 32px 0; }
+.ep-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--ep-radius-lg);
+    border: 1px solid var(--ep-border-subtle);
+}
+.ep-figure figcaption {
+    margin-top: 10px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ep-subtle);
+}
+
+/* =====================================================================
+   Chart shell  —  .ep-chart
+   The runtime (charts-runtime.ts) finds these by [data-chart] and draws
+   into the canvas. Height lives here rather than in the embed so every
+   chart in an article shares one rhythm.
+===================================================================== */
+.ep-chart {
+    margin: 32px 0;
+    padding: 20px 22px 18px;
+    border: 1px solid var(--ep-border);
+    border-radius: var(--ep-radius-lg);
+    background: var(--ep-surface);
+}
+.ep-chart figcaption {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+}
+.ep-chart__title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ep-text);
+    letter-spacing: -0.01em;
+}
+.ep-chart__desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ep-subtle);
+    margin: 5px 0 0;
+    max-width: 62ch;
+}
+.ep-chart__canvas-wrap {
+    position: relative;
+    margin-top: 16px;
+    height: 320px;
+}
+.ep-chart[data-chart="doughnut"] .ep-chart__canvas-wrap,
+.ep-chart[data-chart="radar"] .ep-chart__canvas-wrap { height: 340px; }
+.ep-chart canvas { display: block; }
+.ep-chart__source {
+    margin: 14px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--ep-border-subtle);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ep-subtlest);
+    line-height: 1.6;
+}
+
+/* =====================================================================
+   Prose  —  .ep-prose
+   Apply this class to a Webflow Rich Text element and every native
+   element a writer can produce in the editor renders on-brand, with no
+   per-element styling in the Designer.
+===================================================================== */
+.ep-prose {
+    font-family: var(--ep-font-sans);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ep-text);
+    max-width: 68ch;
+}
+.ep-prose > * + * { margin-top: 1.1em; }
+.ep-prose h2,
+.ep-prose h3,
+.ep-prose h4 {
+    font-family: var(--ep-font-display);
+    color: var(--ep-text);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    font-weight: 600;
+}
+.ep-prose h2 { font-size: 30px; margin-top: 2em; }
+.ep-prose h3 { font-size: 22px; margin-top: 1.7em; }
+.ep-prose h4 { font-size: 18px; margin-top: 1.5em; }
+.ep-prose p { margin: 0; }
+.ep-prose a {
+    color: var(--ep-accent-ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+}
+.ep-prose a:hover { text-decoration-thickness: 2px; }
+.ep-prose strong { font-weight: 600; }
+.ep-prose ul,
+.ep-prose ol { margin: 0; padding-left: 1.4em; }
+.ep-prose li + li { margin-top: 0.45em; }
+.ep-prose li::marker { color: var(--ep-accent); }
+.ep-prose blockquote {
+    margin: 0;
+    padding-left: 20px;
+    border-left: 3px solid var(--ep-accent);
+    font-family: var(--ep-font-display);
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--ep-text);
+}
+.ep-prose hr {
+    border: 0;
+    border-top: 1px solid var(--ep-border);
+    margin: 2.4em 0;
+}
+.ep-prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--ep-radius-lg);
+}
+.ep-prose figcaption {
+    font-size: 12.5px;
+    color: var(--ep-subtle);
+    margin-top: 8px;
+}
+.ep-prose code {
+    font-family: var(--ep-font-mono);
+    font-size: 0.875em;
+    padding: 2px 5px;
+    border-radius: var(--ep-radius);
+    background: var(--ep-sunken);
+    color: var(--ep-accent-ink);
+}
+.ep-prose pre {
+    font-family: var(--ep-font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 18px 20px;
+    border-radius: var(--ep-radius-lg);
+    background: var(--ep-sunken);
+    border: 1px solid var(--ep-border-subtle);
+    overflow-x: auto;
+}
+.ep-prose pre code {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+}
+
+/* =====================================================================
+   Motion
+===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .ep-blog *,
+    .ep-blog *::before,
+    .ep-blog *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
