@@ -4,7 +4,10 @@ Foundations, editorial components and data visualizations for the EventPipe
 blog — authored in Storybook, shipped to a Webflow-hosted site as copy-paste
 embeds.
 
-### ▶ Open Storybook locally: `pnpm storybook` → http://localhost:6008
+### ▶ [Open the live Storybook →](https://epprestodesign.github.io/ep-blog-ds-v1/)
+
+Auto-deployed from GitHub Pages on every push to `main`. Locally:
+`pnpm storybook` → http://localhost:6008
 
 ---
 
@@ -99,7 +102,16 @@ references/              Bespoke visualizations, one HTML file each
 ```bash
 pnpm install
 pnpm storybook          # http://localhost:6008
+pnpm typecheck          # tsc -b
 pnpm build-storybook
 ```
 
-Storybook auto-deploys to GitHub Pages on every push to `main`.
+There is no application build. Storybook is the only surface this repo
+produces — everything that reaches the live blog does so through
+`src/webflow-embeds/`, as HTML pasted into Webflow or a stylesheet linked from
+this repo.
+
+Storybook auto-deploys to
+**[epprestodesign.github.io/ep-blog-ds-v1](https://epprestodesign.github.io/ep-blog-ds-v1/)**
+on every push to `main`. The same workflow purges the jsDelivr cache for
+`blog-embeds.css`, so a restyle reaches the live Webflow blog in the same run.

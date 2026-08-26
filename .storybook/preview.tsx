@@ -61,10 +61,25 @@ const preview: Preview = {
       storySort: {
         order: [
           'Getting Started',
+          // Mirrors the Foundations order in the EventPipe product design
+          // system, so someone moving between the two libraries finds the
+          // same page in the same place.
           'Foundations',
-          ['Palette', 'Typography', 'Scales', 'Content Style Guide'],
+          [
+            'Colors',
+            'Border Radius',
+            'Breakpoints',
+            'Elevation',
+            'Icons',
+            'Imagery',
+            'Logos',
+            'Motion',
+            'Palette',
+            'Spacing',
+            'Typography',
+          ],
           'Embed Kit',
-          ['Webflow Setup', 'Components', 'Charts'],
+          ['Webflow Setup', 'Content Style Guide', 'Components', 'Charts'],
           'Editorial',
         ],
       },

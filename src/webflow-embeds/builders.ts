@@ -14,6 +14,8 @@
  *     and in a CMS-driven field it is worse than that.
  */
 
+import { icon } from './icons'
+
 const escRaw = (v: string): string =>
     v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
@@ -133,10 +135,13 @@ ${credit}
    Callout
 =================================================================== */
 
-const CALLOUT_ICONS: Record<Accent, string> = {
-    teal: '<path d="M12 2a7 7 0 0 0-4 12.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3A7 7 0 0 0 12 2Z"/><path d="M9 21h6"/>',
-    harbor: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
-    amber: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>',
+/** Each accent carries a different kind of aside, so each gets its own glyph —
+ *  the color alone is not a strong enough signal, and it is invisible to anyone
+ *  who cannot distinguish teal from amber. */
+const CALLOUT_ICON: Record<Accent, 'insight' | 'info' | 'caution'> = {
+    teal: 'insight',
+    harbor: 'info',
+    amber: 'caution',
 }
 
 export function buildCalloutEmbed(
@@ -147,7 +152,7 @@ export function buildCalloutEmbed(
     }: { title?: string; text: string; accent?: Accent },
     mode?: 'light' | 'dark',
 ): string {
-    const icon = `<svg class="ep-callout__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CALLOUT_ICONS[accent]}</svg>`
+    const glyph = icon(CALLOUT_ICON[accent], 'ep-callout__icon')
 
     const body = lines(text)
         .map((p) => `    <p class="ep-callout__text">${esc(p)}</p>`)
@@ -155,7 +160,7 @@ export function buildCalloutEmbed(
 
     return wrap(
         `<aside class="ep-callout" data-accent="${accent}">
-  ${icon}
+  ${glyph}
   <div class="ep-callout__body">
 ${title ? `    <p class="ep-callout__title">${esc(title)}</p>\n` : ''}${body}
   </div>
@@ -175,10 +180,8 @@ export interface TableColumn {
     type: ColumnType
 }
 
-const TABLE_CHECK =
-    '<svg class="ep-table__icon ep-table__icon--check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>'
-const TABLE_CROSS =
-    '<svg class="ep-table__icon ep-table__icon--cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>'
+const TABLE_CHECK = icon('check', 'ep-table__icon ep-table__icon--check')
+const TABLE_CROSS = icon('cross', 'ep-table__icon ep-table__icon--cross')
 
 const TRUTHY = new Set(['yes', 'y', 'true', '1', '✓', '✔', 'on'])
 
@@ -256,8 +259,7 @@ ${body}
    Checklist
 =================================================================== */
 
-const CHECK_ICON =
-    '<svg class="ep-checklist__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>'
+const CHECK_ICON = icon('checkCircle', 'ep-checklist__icon')
 
 export function buildChecklistEmbed(
     { heading, items }: { heading?: string; items: string[] },
@@ -305,8 +307,9 @@ ${s.text ? `      <p class="ep-steps__text">${esc(s.text)}</p>\n` : ''}    </div
    FAQ — native <details>, no JavaScript required in Webflow
 =================================================================== */
 
-const FAQ_ICON =
-    '<svg class="ep-faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
+// A plus that the stylesheet rotates 45° into a close mark when the item opens,
+// so the open and closed states share one glyph and one paint.
+const FAQ_ICON = icon('plus', 'ep-faq__icon')
 
 export interface FaqItem {
     question: string

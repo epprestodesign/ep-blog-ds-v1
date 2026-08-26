@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Shell } from '../story-shell'
+import { Shell } from '../components/story-shell'
 
-const meta: Meta = { title: 'Foundations/Content Style Guide', parameters: { layout: 'fullscreen' } }
+const meta: Meta = { title: 'Embed Kit/Content Style Guide', parameters: { layout: 'fullscreen' } }
 export default meta
 type Story = StoryObj
 

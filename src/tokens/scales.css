@@ -66,6 +66,24 @@
   --ep-measure: 62ch;
   --ep-container: 1180px;
 
+  /* --- Breakpoints -------------------------------------------- */
+  /* These mirror Webflow's breakpoints exactly, because Webflow is where the
+     blog renders — a design system that reflows on different widths than the
+     platform hosting it produces layouts that are broken only in the gaps
+     between the two.
+
+     CSS cannot read a custom property inside a media query, so these are
+     reference values for documentation and for JS (matchMedia), not something
+     a stylesheet can consume. Media queries below still hardcode the numbers;
+     these tokens exist so there is one place that says what the numbers are. */
+  --ep-bp-mobile-portrait: 479px;   /* and below */
+  --ep-bp-mobile-landscape: 767px;  /* and below */
+  --ep-bp-tablet: 991px;            /* and below */
+  --ep-bp-desktop: 992px;           /* and above — Webflow's base canvas */
+  --ep-bp-large: 1280px;
+  --ep-bp-xlarge: 1440px;
+  --ep-bp-xxlarge: 1920px;
+
   /* --- Elevation ---------------------------------------------- */
   --ep-shadow-1: 0 1px 2px rgba(16, 22, 62, 0.08);
   --ep-shadow-2: 0 4px 12px rgba(16, 22, 62, 0.12);
