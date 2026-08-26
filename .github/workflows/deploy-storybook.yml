@@ -42,6 +42,11 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      # Storybook's Vite build strips types with esbuild and never checks them,
+      # so a type error would otherwise reach main and deploy silently.
+      - run: pnpm typecheck
+
       - run: pnpm build-storybook
         env:
           STORYBOOK_DISABLE_TELEMETRY: '1'

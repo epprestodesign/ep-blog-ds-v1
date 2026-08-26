@@ -99,7 +99,13 @@ references/              Bespoke visualizations, one HTML file each
 ```bash
 pnpm install
 pnpm storybook          # http://localhost:6008
+pnpm typecheck          # tsc -b
 pnpm build-storybook
 ```
+
+There is no application build. Storybook is the only surface this repo
+produces — everything that reaches the live blog does so through
+`src/webflow-embeds/`, as HTML pasted into Webflow or a stylesheet linked from
+this repo.
 
 Storybook auto-deploys to GitHub Pages on every push to `main`.

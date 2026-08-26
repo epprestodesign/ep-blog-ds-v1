@@ -3,11 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "EventPipe blog design system — foundations, editorial components and data visualizations, authored in Storybook and shipped to a Webflow-hosted blog as copy-paste embeds.",
+  "description": "EventPipe blog design system \u2014 foundations, editorial components and data visualizations, authored in Storybook and shipped to a Webflow-hosted blog as copy-paste embeds.",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
+    "typecheck": "tsc -b",
     "storybook": "storybook dev -p 6008",
     "build-storybook": "storybook build"
   },
