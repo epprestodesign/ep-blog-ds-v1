@@ -1,5 +1,5 @@
 import { Chart, registerables } from 'chart.js'
-import { useEffect } from 'react'
+import { useEffect, type RefObject } from 'react'
 import { CHARTS_RUNTIME } from './charts-runtime'
 
 declare global {
@@ -10,32 +10,52 @@ declare global {
     }
 }
 
+type ChartHost = HTMLElement & { __epMounted?: boolean; __epChart?: { destroy: () => void } }
+
+function ensureRuntime() {
+    if (window.__epRuntimeLoaded) return
+    Chart.register(...registerables)
+    window.Chart = Chart
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    new Function(CHARTS_RUNTIME)()
+    window.__epRuntimeLoaded = true
+}
+
 /**
- * Runs the *shipped* chart runtime inside Storybook rather than a React
- * reimplementation of it. If a chart looks right in a story it looks right in
- * Webflow, because it is the same code drawing it — there is no second
- * rendering path that could drift.
+ * Renders an embed's HTML and hands the subtree to the shipped chart runtime.
+ *
+ * The container's contents are set imperatively rather than through
+ * `dangerouslySetInnerHTML`, and the element React renders stays empty. That
+ * boundary is the whole point: the runtime mutates this DOM — sizing canvases,
+ * attaching Chart.js instances — and React knows nothing about any of it. When
+ * React owned the subtree, an unrelated re-render elsewhere on the page (a
+ * theme token resolving, a parent context updating) replaced the markup and
+ * silently discarded every rendered chart, leaving blank 300×150 canvases
+ * behind. Nothing here reads as broken until you look at the page.
+ *
+ * Using the shipped runtime rather than a React chart component is deliberate:
+ * a story that renders through a different code path than production can pass
+ * while production is broken.
  */
-export function useChartsRuntime(container: React.RefObject<HTMLElement | null>, deps: unknown[] = []) {
+export function useEmbedHtml(container: RefObject<HTMLElement | null>, html: string) {
     useEffect(() => {
-        if (!window.__epRuntimeLoaded) {
-            Chart.register(...registerables)
-            window.Chart = Chart
-            // eslint-disable-next-line @typescript-eslint/no-implied-eval
-            new Function(CHARTS_RUNTIME)()
-            window.__epRuntimeLoaded = true
-        }
+        ensureRuntime()
 
         const root = container.current
         if (!root) return
 
-        // A re-render replaces the markup wholesale, so any chart instance the
-        // runtime attached to the old nodes is orphaned. Clear the mount flags
-        // and let it draw again against the current DOM.
-        root.querySelectorAll<HTMLElement & { __epMounted?: boolean }>('.ep-chart').forEach((el) => {
-            el.__epMounted = false
-        })
+        root.innerHTML = html
         window.epBlogCharts?.mount(root)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, deps)
+
+        return () => {
+            // Chart.js keeps its instances in a global registry keyed by canvas.
+            // Dropping the markup without destroying them leaks a chart per
+            // render, and each one keeps its resize and pointer listeners alive.
+            root.querySelectorAll<ChartHost>('.ep-chart').forEach((el) => {
+                el.__epChart?.destroy()
+                el.__epMounted = false
+            })
+            root.innerHTML = ''
+        }
+    }, [container, html])
 }

@@ -61,6 +61,21 @@ Three one-time pastes. After that, publishing a new component is a merge to
 
 Full walkthrough: [`docs/WEBFLOW.md`](docs/WEBFLOW.md).
 
+## Charts
+
+The blog's charts ship as `<figure class="ep-chart" data-chart="…" data-config='…'>`
+markup drawn by one Chart.js runtime pasted into Webflow once. The runtime reads
+its colours from the computed `--ep-chart-*` custom properties on each chart
+element, so charts pasted months ago pick up a rebrand on the next merge.
+
+**MUI X Charts is installed as a visual reference, and never ships.** It is React
+and Emotion, so it cannot run inside a Webflow embed. It lives in
+`devDependencies` and nothing in `src/webflow-embeds/` imports it. Its only job
+is to be the target the shipping runtime is tuned against — see
+**Embed Kit → Charts → Reference**, where both engines render the same data from
+the same tokens so any remaining difference is a real styling gap rather than a
+palette mismatch.
+
 ## Brands
 
 Two foundations, switched by attribute on any element:

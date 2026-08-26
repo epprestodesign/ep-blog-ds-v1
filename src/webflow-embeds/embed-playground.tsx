@@ -1,6 +1,6 @@
 import { Check, Copy } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { useChartsRuntime } from './use-charts-runtime'
+import { useEmbedHtml } from './use-charts-runtime'
 
 interface EmbedPlaygroundProps {
     /** The HTML string a builder produced — previewed and copied verbatim. */
@@ -51,7 +51,7 @@ function CopyButton({ text }: { text: string }) {
  */
 export function EmbedPlayground({ html, title, instructions, mode = 'light' }: EmbedPlaygroundProps) {
     const previewRef = useRef<HTMLDivElement>(null)
-    useChartsRuntime(previewRef, [html, mode])
+    useEmbedHtml(previewRef, html)
 
     return (
         <div className="flex flex-col gap-4">
@@ -68,7 +68,6 @@ export function EmbedPlayground({ html, title, instructions, mode = 'light' }: E
                 data-ep-mode={mode}
                 className="rounded-lg border border-line p-6"
                 style={{ background: mode === 'dark' ? '#10163E' : 'var(--ep-color-surface)' }}
-                dangerouslySetInnerHTML={{ __html: html }}
             />
 
             <details className="group rounded-lg border border-line bg-surface-sunken">

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { imageUrl } from '../lib/imagery'
 import { Shell } from '../components/story-shell'
 import {
     buildCalloutEmbed,
@@ -256,8 +257,10 @@ export const Tags: Story = {
 
 export const Figure: Story = {
     args: {
-        src: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&q=80',
-        alt: 'A conference hall filled with attendees seated in rows',
+        // From the shared EventPipe image host, not a bare unsplash.com URL —
+        // attribution travels with the file. See Foundations → Imagery.
+        src: imageUrl('live-events/stadium-crowd-1'),
+        alt: 'A packed stadium during an evening event',
         caption: 'Peak arrival day accounts for a third of all check-ins across the season.',
         mode: 'light',
     },
