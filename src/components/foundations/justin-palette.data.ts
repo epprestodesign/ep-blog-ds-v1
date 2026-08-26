@@ -117,16 +117,16 @@ export interface DataVizEntry {
 
 /** Measured from the hexes above — see the Analysis section of the story. */
 export const justinDataViz: DataVizEntry[] = [
-    { position: 1, name: 'Teal', hex: '#4DAAB1', lightness: 0.685, onWhite: 2.73, onMidnight: 6.38 },
-    { position: 2, name: 'Navy', hex: '#1B3D5D', lightness: 0.351, onWhite: 11.22, onMidnight: 1.55 },
-    { position: 3, name: 'Magenta', hex: '#CB4F8A', lightness: 0.608, onWhite: 4.18, onMidnight: 4.17 },
-    { position: 4, name: 'Gold', hex: '#C9963F', lightness: 0.706, onWhite: 2.65, onMidnight: 6.56 },
-    { position: 5, name: 'Violet', hex: '#7560B3', lightness: 0.547, onWhite: 5.15, onMidnight: 3.38 },
-    { position: 6, name: 'Green', hex: '#57956A', lightness: 0.616, onWhite: 3.55, onMidnight: 4.90 },
-    { position: 7, name: 'Coral', hex: '#CE6C5B', lightness: 0.641, onWhite: 3.55, onMidnight: 4.91 },
-    { position: 8, name: 'Sky', hex: '#4C82C3', lightness: 0.599, onWhite: 3.97, onMidnight: 4.38 },
-    { position: 9, name: 'Plum', hex: '#8B5A78', lightness: 0.531, onWhite: 5.48, onMidnight: 3.18 },
-    { position: 10, name: 'Orange', hex: '#C7773E', lightness: 0.645, onWhite: 3.42, onMidnight: 5.09 },
+    { position: 1, name: 'Bright Teal', hex: '#18B6C1', lightness: 0.708, onWhite: 2.47, onMidnight: 7.05 },
+    { position: 2, name: 'Bright Navy', hex: '#175A85', lightness: 0.449, onWhite: 7.40, onMidnight: 2.35 },
+    { position: 3, name: 'Vibrant Magenta', hex: '#E13D8F', lightness: 0.625, onWhite: 3.99, onMidnight: 4.36 },
+    { position: 4, name: 'Golden Amber', hex: '#E9A126', lightness: 0.761, onWhite: 2.19, onMidnight: 7.95 },
+    { position: 5, name: 'Electric Violet', hex: '#7657D6', lightness: 0.556, onWhite: 5.12, onMidnight: 3.40 },
+    { position: 6, name: 'Emerald Green', hex: '#3DA66B', lightness: 0.649, onWhite: 3.06, onMidnight: 5.69 },
+    { position: 7, name: 'Coral', hex: '#E96855', lightness: 0.672, onWhite: 3.19, onMidnight: 5.45 },
+    { position: 8, name: 'Bright Blue', hex: '#438DDA', lightness: 0.632, onWhite: 3.46, onMidnight: 5.02 },
+    { position: 9, name: 'Orchid / Plum', hex: '#A65396', lightness: 0.566, onWhite: 4.88, onMidnight: 3.56 },
+    { position: 10, name: 'Orange', hex: '#E47D2D', lightness: 0.692, onWhite: 2.89, onMidnight: 6.03 },
 ]
 
 export const justinColors = justinDataViz.map((d) => d.hex)
@@ -134,9 +134,34 @@ export const justinColors = justinDataViz.map((d) => d.hex)
 /** Pairs closest together in OKLab — the ones a reader is most likely to
  *  confuse. Distance below roughly 0.09 is worth designing around. */
 export const closestPairs: { a: string; b: string; distance: number; positions: string }[] = [
-    { a: 'Coral', b: 'Orange', distance: 0.05, positions: '7 and 10' },
-    { a: 'Gold', b: 'Orange', distance: 0.079, positions: '4 and 10' },
-    { a: 'Violet', b: 'Sky', distance: 0.097, positions: '5 and 8' },
-    { a: 'Violet', b: 'Plum', distance: 0.098, positions: '5 and 9' },
-    { a: 'Teal', b: 'Green', distance: 0.102, positions: '1 and 6' },
+    { a: 'Coral', b: 'Orange', distance: 0.068, positions: '7 and 10' },
+    { a: 'Golden Amber', b: 'Orange', distance: 0.088, positions: '4 and 10' },
+    { a: 'Vibrant Magenta', b: 'Orchid / Plum', distance: 0.111, positions: '3 and 9' },
+    { a: 'Bright Teal', b: 'Emerald Green', distance: 0.117, positions: '1 and 6' },
+    { a: 'Bright Teal', b: 'Bright Blue', distance: 0.132, positions: '1 and 8' },
 ]
+
+/**
+ * The series colours were revised to a brighter set after the ramps were
+ * written, so they are no longer the 500 step of the ramp that shares their
+ * name — Bright Teal is #18B6C1 where teal-500 is #4DAAB1. The ramps are kept
+ * as supplied rather than quietly regenerated; the story says so plainly.
+ */
+export const RAMPS_DIVERGE_FROM_SERIES = true
+
+/** Measured against the previous, softer series set, for comparison. */
+export const previousSeriesStats = {
+    chromaMean: 0.111,
+    lightnessMean: 0.593,
+    lightnessRange: 0.355,
+    closestPair: 0.05,
+    navyOnMidnight: 1.55,
+}
+
+export const seriesStats = {
+    chromaMean: 0.149,
+    lightnessMean: 0.631,
+    lightnessRange: 0.312,
+    closestPair: 0.068,
+    navyOnMidnight: 2.35,
+}

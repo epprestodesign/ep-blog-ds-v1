@@ -7,6 +7,8 @@ import {
     justinColors,
     justinDataViz,
     justinRamps,
+    previousSeriesStats,
+    seriesStats,
 } from './foundations/justin-palette.data'
 import { buildChartEmbed, type ChartType } from '../webflow-embeds/builders'
 import { useEmbedHtml } from '../webflow-embeds/use-charts-runtime'
@@ -260,7 +262,8 @@ export const JustinsExploration: Story = {
                     Hand-authored rather than derived — ten hues at eleven steps, with a fixed
                     data-visualization order. Everything below uses the supplied hexes verbatim;
                     nothing is recomputed. The analysis at the foot of the page is measured from
-                    them.
+                    them, and records how the revised brighter series compares with the softer set
+                    it replaced.
                     <br />
                     <br />
                     The <strong>order</strong> is the load-bearing part. A chart with N series takes
@@ -338,61 +341,101 @@ export const JustinsExploration: Story = {
                 note="Measured from the supplied hexes, in OKLab and OKLCH — the same method used for the generated schemes, so the two are comparable."
             >
                 <div className="flex flex-col gap-5 text-[13.5px] leading-relaxed text-subtle">
+                    <div className="rounded-lg border border-line bg-surface p-4">
+                        <h4 className="mb-2 text-[13.5px] font-semibold text-ink">
+                            Measurably better than the first set
+                        </h4>
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[12.5px] sm:grid-cols-4">
+                            {[
+                                ['Chroma (mean)', previousSeriesStats.chromaMean, seriesStats.chromaMean, 'higher is more vivid'],
+                                ['Lightness spread', previousSeriesStats.lightnessRange, seriesStats.lightnessRange, 'lower is more even'],
+                                ['Closest pair', previousSeriesStats.closestPair, seriesStats.closestPair, 'higher is easier to tell apart'],
+                                ['Navy on Midnight', previousSeriesStats.navyOnMidnight, seriesStats.navyOnMidnight, 'higher is more legible'],
+                            ].map(([label, before, after, note]) => (
+                                <div key={label as string}>
+                                    <div className="text-[10px] font-semibold tracking-[0.1em] text-subtle uppercase">
+                                        {label as string}
+                                    </div>
+                                    <div className="mt-0.5 tabular-nums">
+                                        <span className="text-subtlest line-through">{Number(before).toFixed(3)}</span>{' '}
+                                        <span className="font-semibold text-accent">{Number(after).toFixed(3)}</span>
+                                    </div>
+                                    <div className="text-[10.5px] text-subtlest">{note as string}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     <div>
                         <h4 className="mb-1 text-[13.5px] font-semibold text-ink">
-                            Navy is the outlier, and it is the one real problem
+                            The brighter set improves on every axis
                         </h4>
                         <p className="max-w-[76ch]">
-                            At OKLCH lightness <strong>0.351</strong> against a set averaging{' '}
-                            <strong>0.593</strong>, Navy is far darker than every other series. In a
-                            stacked bar it reads as heavier and more important than its neighbours
-                            regardless of its value. It also scores <strong>1.55:1</strong> against
-                            the Midnight canvas, so on the dark theme it is effectively invisible —
-                            a dark navy band on a dark navy ground. If the dark canvas matters,
-                            Navy needs a lighter step (600 or 500 of a lifted ramp) for charts,
-                            keeping the current value for the light theme only.
+                            Mean chroma rises by roughly a third, so series read as deliberate
+                            colour rather than tinted grey. More usefully, the lightness spread{' '}
+                            <em>narrows</em> at the same time — normally a palette gets more vivid
+                            and less even together, and this one did not. A tighter spread means no
+                            series looks heavier than another simply because of its hue.
                         </p>
                     </div>
 
                     <div>
                         <h4 className="mb-1 text-[13.5px] font-semibold text-ink">
-                            The warm end crowds
+                            Bright Navy is still the one thing to watch
                         </h4>
                         <p className="max-w-[76ch]">
-                            Coral, Orange and Gold sit within 47° of hue of each other. Coral and
-                            Orange are the closest pair in the whole set at an OKLab distance of{' '}
-                            <strong>0.050</strong> — close enough to be confused when adjacent.
-                            They are positions 7 and 10, so it only bites on charts with eight or
-                            more series, which is the right place for the weakness to be. Gold and
-                            Orange (positions 4 and 10) are the next closest at 0.079.
-                        </p>
-                    </div>
-
-                    <div>
-                        <h4 className="mb-1 text-[13.5px] font-semibold text-ink">The ordering is sound</h4>
-                        <p className="max-w-[76ch]">
-                            The first six are well spread around the wheel, and the closest pair
-                            among them — Teal and Green at 0.102 — sits at positions 1 and 6, about
-                            as far apart in the order as it can be. Nothing needs reordering for
-                            the common cases.
+                            It is much improved — lightness 0.351 → <strong>0.449</strong>, and
+                            contrast on the Midnight canvas 1.55 → <strong>2.35:1</strong> — but it
+                            is still the darkest series by a clear margin and still the only one
+                            below 3:1 on the dark theme. On light it now works well. If the dark
+                            canvas matters for charts, this hue wants a lifted step there; nothing
+                            else in the set needs one.
                         </p>
                     </div>
 
                     <div>
                         <h4 className="mb-1 text-[13.5px] font-semibold text-ink">
-                            Nothing clears 4.5:1 for text on white
+                            Coral and Orange remain the tightest pair
                         </h4>
                         <p className="max-w-[76ch]">
-                            Only Navy (11.2), Plum (5.5), Violet (5.2) and Magenta (4.2, marginal)
-                            come close. That is fine — these are <em>fills</em>, and a fill does not
-                            need text contrast. It does mean none of the 500 steps should be used
-                            for coloured type on white; the 700–900 steps of each ramp exist for
-                            that.
+                            Improved from 0.050 to <strong>0.068</strong>, but still the closest two
+                            in the set, and Golden Amber sits near Orange as well at 0.088. All
+                            three are warm and adjacent on the wheel. They occupy positions 4, 7 and
+                            10, so a chart has to reach eight series before any two of them meet —
+                            which is the right place for the weakness to sit, and further than most
+                            editorial charts go.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 className="mb-1 text-[13.5px] font-semibold text-ink">
+                            The ramps no longer match the series
+                        </h4>
+                        <p className="max-w-[76ch]">
+                            The series colours were revised after the ramps were written, so they
+                            are no longer the 500 step of the ramp sharing their name — Bright Teal
+                            is <code>#18B6C1</code> where <code>teal-500</code> is{' '}
+                            <code>#4DAAB1</code>. The ramps above are kept exactly as supplied
+                            rather than quietly regenerated around the new anchors. Worth settling
+                            before any of this becomes a token: either the ramps get rebuilt from
+                            the brighter values, or the two are declared independent on purpose.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 className="mb-1 text-[13.5px] font-semibold text-ink">
+                            Still fills, not type
+                        </h4>
+                        <p className="max-w-[76ch]">
+                            Raising chroma lowered contrast against white for the warm hues —
+                            Golden Amber is now 2.19:1. That is correct for a fill and wrong for
+                            text, so none of these should carry coloured type on a light surface.
+                            The 700–900 steps of each ramp exist for that.
                         </p>
                     </div>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[520px] border-collapse text-[13px]">
+                        <table className="w-full min-w-[560px] border-collapse text-[13px]">
                             <thead>
                                 <tr>
                                     {['Closest pairs', 'OKLab distance', 'Positions'].map((h) => (
