@@ -1,9 +1,20 @@
 import { scaleLinear as scaleLinearD3 } from 'd3-scale'
 import { defineChart, dot, link, mountChart, rect, text } from '@tanstack/charts'
+import { barY } from '@tanstack/charts/bar'
+import { bandY } from '@tanstack/charts/band'
+import { differenceY } from '@tanstack/charts/difference'
+import { treeLayout } from '@tanstack/charts/hierarchy/tree'
+import { forceLayout } from '@tanstack/charts/network/force'
+import { polar, radialArc, radialBarAngle, radialLine } from '@tanstack/charts/polar'
+import { vector } from '@tanstack/charts/vector'
+import { densityContour } from '@tanstack/charts/spatial/density'
+import { voronoi } from '@tanstack/charts/spatial/voronoi'
+import { binX } from '@tanstack/charts/transform/bin'
+import { waterfall } from '@tanstack/charts/transform/waterfall'
+
 import { boxY } from '@tanstack/charts/box'
 import { treemap } from '@tanstack/charts/hierarchy/treemap'
 import { sunburst } from '@tanstack/charts/hierarchy/sunburst'
-import { polar } from '@tanstack/charts/polar'
 import { sankeyDiagram } from '@tanstack/charts/network/sankey'
 import { scaleBand } from '@tanstack/charts/scales/band'
 import { scaleLinear } from '@tanstack/charts/scales/linear'
@@ -16,10 +27,19 @@ import { linearRegressionY } from '@tanstack/charts/regression'
 import { cell } from '@tanstack/charts/rect'
 import type { StudioChart } from './svg-studio'
 import {
+    ALL_TRIP_LENGTHS,
+    BLOCK_RANGES,
+    BUDGET_VS_ACTUAL,
     CHANNEL_FLOW,
+    FORCE_LINKS,
+    FORCE_NODES,
+    MOMENTUM,
+    ORG_TREE,
+    PICKUP_BRIDGE,
     CHANNEL_SHARE,
     HEAT_CELLS,
     LEAD_VS_LENGTH,
+    MONTH_SERIES,
     ROOM_NIGHTS_TREE,
     TRIP_DENSITY,
     TRIP_LENGTHS,
@@ -294,6 +314,241 @@ export const editorialCharts: StudioChart[] = [
                 }),
                 width, height, 'Lead time against trip length, with fitted trend',
             ),
+    },
+
+    {
+        id: 'histogram',
+        name: 'Histogram',
+        note: 'One variable, binned. The chart that answers "what does the spread actually look like" before any average gets quoted.',
+        marks: 'binX (transform) + rect — @tanstack/charts/transform/bin',
+        height: 340,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [rect(binX(ALL_TRIP_LENGTHS, { value: 'value', thresholds: 16 }) as never, {
+                    x1: 'x0', x2: 'x1', y1: () => 0, y2: 'count', fill: colors[0], inset: 1,
+                })],
+                scales: {
+                    x: { scale: scaleLinear, nice: true, axis: { label: 'Nights' } },
+                    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Reservations' } },
+                },
+            }), width, height, 'Distribution of trip lengths'),
+    },
+    {
+        id: 'range-band',
+        name: 'Interval band',
+        note: 'A low and a high per category, drawn as a span. Shows a range without implying a value in between.',
+        marks: 'bandY — @tanstack/charts/band',
+        height: 340,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [bandY(BLOCK_RANGES, { x: 'market', y1: 'low', y2: 'high', fill: colors[0] })],
+                scales: {
+                    x: { scale: () => scaleBand().padding(0.5) },
+                    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Room nights' } },
+                },
+            }), width, height, 'Contracted against picked-up block'),
+    },
+    {
+        id: 'difference',
+        name: 'Difference',
+        note: 'Two series with the gap between them shaded, and the shading changing colour where they cross. Far clearer than two lines and a caption explaining which is ahead.',
+        marks: 'differenceY — @tanstack/charts/difference',
+        height: 360,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [differenceY(BUDGET_VS_ACTUAL.map((d, i) => ({ ...d, i })), {
+                    x: 'i', y: 'actual', y2: 'budget',
+                    positiveFill: colors[0], negativeFill: colors[2],
+                } as never)],
+                scales: {
+                    // The mark inverts the x scale to find crossings, so a point
+                    // scale will not do — the index is mapped linearly instead.
+                    x: { scale: scaleLinear, axis: { label: 'Month index' } },
+                    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Room nights' } },
+                },
+            }), width, height, 'Actual against budgeted room nights'),
+    },
+    {
+        id: 'waterfall',
+        name: 'Waterfall',
+        note: 'How a starting figure becomes an ending one, step by step. The right chart for explaining a number rather than only reporting it.',
+        marks: 'waterfall (transform) + bar — @tanstack/charts/transform/waterfall',
+        height: 360,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [barY(waterfall(PICKUP_BRIDGE, { value: 'delta' }) as never, {
+                    x: 'step', y1: 'y0', y2: 'y1', fill: colors[0], borderRadius: 2,
+                } as never)],
+                scales: {
+                    x: { scale: () => scaleBand().padding(0.3) },
+                    y: { scale: scaleLinear, nice: true, grid: true, axis: { label: 'Room nights' } },
+                },
+            }), width, height, 'From contracted block to actual pickup'),
+    },
+    {
+        id: 'tree',
+        name: 'Tree / dendrogram',
+        note: 'Hierarchy as a node-link diagram. Shows depth and parentage directly, where a treemap shows only proportion.',
+        marks: 'treeLayout — @tanstack/charts/hierarchy/tree',
+        height: 420,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: (() => {
+                    // treeLayout keys on `id`, while treemap keys on `nodeId`
+                    // for the same concept.
+                    const laid = treeLayout(ORG_TREE, {
+                        id: 'id',
+                        parentId: 'parentId',
+                    }) as unknown as { nodes: any[]; links: any[] }
+                    return [
+                        link(laid.links, { x1: 'x1', y1: 'y1', x2: 'x2', y2: 'y2', stroke: colors[1], strokeOpacity: 0.4 }),
+                        dot(laid.nodes, { x: 'x', y: 'y', fill: colors[0], r: 5 }),
+                        text(laid.nodes, { x: 'x', y: 'y', text: (n: any) => n.data?.label ?? '', dy: -12 }),
+                    ]
+                })(),
+                scales: { x: { scale: scaleLinear }, y: { scale: scaleLinear } },
+                guides: false,
+            }), width, height, 'Season hierarchy by region and market'),
+    },
+    {
+        id: 'force',
+        name: 'Force-directed network',
+        note: 'Topology where the layout is emergent rather than authored. Good for showing that a network is dense or clustered; bad for reading any individual value off it.',
+        marks: 'forceLayout — @tanstack/charts/network/force',
+        height: 420,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                // forceLayout(nodes, links, options) and returns laid-out data
+                // plus its own domains — it is a layout, not a mark.
+                marks: (() => {
+                    // `forces` is required — the layout configures no
+                    // simulation of its own, which is a deliberate refusal to
+                    // guess but does mean force graphs need more setup than
+                    // every other mark here.
+                    const laid = forceLayout(FORCE_NODES, FORCE_LINKS, {
+                        nodeKey: 'id',
+                        source: 'source',
+                        target: 'target',
+                        forces: [
+                            { type: 'link', distance: 60 },
+                            { type: 'manyBody', strength: -180 },
+                            { type: 'center' },
+                            { type: 'collide', radius: 14 },
+                        ],
+                    } as never) as unknown as { nodes: any[]; links: any[] }
+                    return [
+                        link(laid.links, { x1: 'x1', y1: 'y1', x2: 'x2', y2: 'y2', stroke: colors[1], strokeOpacity: 0.35 }),
+                        dot(laid.nodes, { x: 'x', y: 'y', fill: colors[0], r: 7 }),
+                    ]
+                })(),
+                // A layout supplies coordinates but still needs real scales to
+                // map them into pixels.
+                scales: { x: { scale: scaleLinear }, y: { scale: scaleLinear } },
+                guides: false,
+            }), width, height, 'Market relationships'),
+    },
+    {
+        id: 'voronoi',
+        name: 'Voronoi',
+        note: 'Partitions the plane by nearest point. Used editorially to show catchment — which market each area belongs to — and technically to widen hit targets on a sparse scatter.',
+        marks: 'voronoi — @tanstack/charts/spatial/voronoi',
+        height: 400,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [
+                    voronoi(LEAD_VS_LENGTH.slice(0, 40), { x: 'lead', y: 'nights', stroke: colors[1], strokeOpacity: 0.35, fill: 'none' } as never),
+                    dot(LEAD_VS_LENGTH.slice(0, 40), { x: 'lead', y: 'nights', fill: colors[0], r: 3 }),
+                ],
+                scales: {
+                    x: { scale: scaleLinear, nice: true, axis: { label: 'Days before arrival' } },
+                    y: { scale: scaleLinear, nice: true, axis: { label: 'Nights' } },
+                },
+            }), width, height, 'Nearest-neighbour regions'),
+    },
+    {
+        id: 'density',
+        name: 'Density contour',
+        note: 'Contour rings over a scatter, like a topographic map of where the points concentrate. Reads better than hexbin when the shape of the cloud matters more than exact counts.',
+        marks: 'densityContour — @tanstack/charts/spatial/density',
+        height: 400,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [densityContour(LEAD_VS_LENGTH, { x: 'lead', y: 'nights', stroke: colors[0], bandwidth: 18 } as never)],
+                scales: {
+                    x: { scale: scaleLinear, nice: true, axis: { label: 'Days before arrival' } },
+                    y: { scale: scaleLinear, nice: true, axis: { label: 'Nights' } },
+                },
+            }), width, height, 'Booking density'),
+    },
+    {
+        id: 'vector',
+        name: 'Vector field',
+        note: 'Direction and magnitude at each point on a grid. Rare in editorial work, but the only honest way to show a flow that has both.',
+        marks: 'vector — @tanstack/charts/vector',
+        height: 380,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [vector(MOMENTUM, { x: 'x', y: 'y', dx: 'dx', dy: 'dy', stroke: colors[0] } as never)],
+                scales: {
+                    x: { scale: scaleLinear, nice: true, axis: { label: 'Days before arrival' } },
+                    y: { scale: scaleLinear, nice: true, axis: { label: 'Nights' } },
+                },
+            }), width, height, 'Booking momentum'),
+    },
+    {
+        id: 'radial-bar',
+        name: 'Radial bar',
+        note: 'Bars wrapped around a circle. Costs accuracy — outer bars get more pixels per unit than inner ones — so use it when the shape is decorative and the figures are labelled.',
+        marks: 'polar + radialBarAngle — @tanstack/charts/polar',
+        height: 420,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [polar({
+                    marks: [radialBarAngle(CHANNEL_SHARE, { angle: 'share', radius: 'channel', fill: colors[0] } as never)],
+                    scales: {
+                        angle: { scale: scaleLinear },
+                        radius: { scale: () => scaleBand().padding(0.25) },
+                    },
+                } as never)],
+                scales: { x: null, y: null },
+            }), width, height, 'Share by channel, radial'),
+    },
+    {
+        id: 'radial-arc',
+        name: 'Radial arc (pie substitute)',
+        note: 'The published 0.15.0 has no pie mark — its docs describe one that only exists on unreleased main. radialArc is how you compose the same thing today.',
+        marks: 'polar + radialArc — @tanstack/charts/polar',
+        height: 420,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [polar({
+                    marks: [radialArc(CHANNEL_SHARE, { angle: 'share', radius: () => 1, color: 'channel', innerRadius: 0.45 } as never)],
+                    scales: {
+                        angle: { scale: scaleLinear },
+                        radius: { scale: scaleLinear },
+                    },
+                } as never)],
+                scales: { x: null, y: null },
+                color: { range: colors },
+            }), width, height, 'Share by channel'),
+    },
+    {
+        id: 'radial-line',
+        name: 'Radial line',
+        note: 'A line in polar coordinates. Suits genuinely cyclical data — months of a season, hours of a day — where the end should meet the beginning.',
+        marks: 'polar + radialLine — @tanstack/charts/polar',
+        height: 420,
+        mount: (el, { width, height, colors }) =>
+            mount(el, defineChart({
+                marks: [polar({
+                    marks: [radialLine(MONTH_SERIES, { angle: 'month', radius: 'thisYear', stroke: colors[0] } as never)],
+                    scales: {
+                        angle: { scale: () => scalePoint() },
+                        radius: { scale: scaleLinear },
+                    },
+                } as never)],
+                scales: { x: null, y: null },
+            }), width, height, 'Room nights through the season'),
     },
     {
         id: 'waffle',
