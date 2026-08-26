@@ -60,11 +60,12 @@ export const CHARTS_RUNTIME = `
       usePointStyle: true, pointStyle: "circle", boxWidth: 6, boxHeight: 6,
       padding: 16, font: { size: 12, family: font }
     };
-    // A doughnut legend keys off slice LABELS, not dataset names, and Chart.js
-    // implements that in the doughnut controller own generateLabels override.
-    // Calling the global default here bypasses it and prints the series name
-    // once instead of naming every slice.
-    if (type === "doughnut") return base;
+    // A pie/doughnut legend keys off slice LABELS, not dataset names, and
+    // Chart.js implements that in the arc controller own generateLabels
+    // override. Calling the global default here bypasses it and prints the
+    // series name once instead of naming every slice. Must cover BOTH arc
+    // types — pie was missed when this was first fixed for doughnut.
+    if (type === "doughnut" || type === "pie") return base;
     base.generateLabels = function (chart) {
       var items = window.Chart.defaults.plugins.legend.labels.generateLabels(chart);
       for (var i = 0; i < items.length; i++) items[i].text = "  " + items[i].text;
@@ -80,19 +81,95 @@ export const CHARTS_RUNTIME = `
     return s + (suffix || "");
   }
 
+  // Our type names describe editorial intent; Chart.js names describe
+  // controllers. "area" and "sparkline" are both line controllers configured
+  // differently, and a gauge is a half doughnut.
+  function controllerFor(type) {
+    if (type === "area" || type === "sparkline") return "line";
+    if (type === "gauge") return "doughnut";
+    return type;
+  }
+
+  function isLineFamily(type) {
+    return type === "line" || type === "area" || type === "sparkline";
+  }
+
+  // Centre readout for gauges. Chart.js has no built-in, and a gauge without
+  // its value is just a coloured arc.
+  var legendSpacing = {
+    id: "epLegendSpacing",
+    beforeInit: function (chart) {
+      var legend = chart.legend;
+      if (!legend || legend.__epPadded) return;
+      legend.__epPadded = true;
+      var fit = legend.fit;
+      legend.fit = function () {
+        fit.call(this);
+        // Only cushion legends above/below the plot. A right-hand legend (pie,
+        // doughnut) is already clear of the drawing area, and padding its
+        // height there just shifts it off centre.
+        if (this.options.position === "top" || this.options.position === "bottom") {
+          this.height += 18;
+        }
+      };
+    }
+  };
+
+  var gaugeText = {
+    id: "epGaugeText",
+    afterDatasetsDraw: function (chart, args, opts) {
+      if (!opts || !opts.display) return;
+      var ctx = chart.ctx;
+      var meta = chart.getDatasetMeta(0);
+      if (!meta || !meta.data || !meta.data[0]) return;
+      var arc = meta.data[0];
+      var cx = arc.x;
+      var cy = arc.y;
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = opts.color;
+      ctx.font = "600 " + opts.size + "px " + opts.font;
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText(opts.value, cx, cy - (opts.label ? 10 : 0));
+      if (opts.label) {
+        ctx.fillStyle = opts.labelColor;
+        ctx.font = "400 12px " + opts.font;
+        ctx.fillText(opts.label, cx, cy + 9);
+      }
+      ctx.restore();
+    }
+  };
+
   function datasets(type, cfg, colors, surface) {
     var series = cfg.series || [];
     var out = [];
     for (var i = 0; i < series.length; i++) {
       var c = series[i].color || colors[i % colors.length];
-      if (type === "line") {
+      if (type === "gauge") {
+        // Two segments: the value, then the remainder drawn in a neutral track.
+        var gv = (series[i].values || [0])[0] || 0;
+        var gmax = cfg.max || 100;
+        out.push({ label: series[i].label, data: [gv, Math.max(gmax - gv, 0)],
+          backgroundColor: [c, alpha(c, 0.15)], borderWidth: 0, circumference: 180,
+          rotation: 270, cutout: "72%" });
+      } else if (type === "scatter") {
+        out.push({ label: series[i].label, data: series[i].values, backgroundColor: c,
+          borderColor: c, pointRadius: 5, pointHoverRadius: 7, showLine: false });
+      } else if (type === "sparkline") {
+        // No axes, no legend, no points — a sparkline is a shape, not a chart.
         out.push({ label: series[i].label, data: series[i].values, borderColor: c,
-          backgroundColor: alpha(c, 0.1), fill: false, tension: 0.4, borderWidth: 2,
-          pointRadius: 0, pointHoverRadius: 4, pointBackgroundColor: c, pointBorderWidth: 0 });
+          backgroundColor: alpha(c, 0.14), fill: true, tension: 0.4, borderWidth: 1.75,
+          pointRadius: 0, pointHoverRadius: 3, pointBackgroundColor: c });
+      } else if (isLineFamily(type)) {
+        var filled = type === "area";
+        out.push({ label: series[i].label, data: series[i].values, borderColor: c,
+          backgroundColor: alpha(c, filled ? 0.22 : 0.1), fill: filled, tension: 0.4,
+          borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, pointBackgroundColor: c,
+          pointBorderWidth: 0 });
       } else if (type === "radar") {
         out.push({ label: series[i].label, data: series[i].values, borderColor: c,
           backgroundColor: alpha(c, 0.16), borderWidth: 2, pointBackgroundColor: c, pointRadius: 3 });
-      } else if (type === "doughnut") {
+      } else if (type === "doughnut" || type === "pie") {
         // Separated with the surface colour rather than a stroke, so adjacent
         // slices of similar hue stay distinct without a visible outline.
         out.push({ label: series[i].label, data: series[i].values, backgroundColor: colors,
@@ -109,7 +186,22 @@ export const CHARTS_RUNTIME = `
     var grid = tok(el, "--ep-chart-grid", "#d2dbe5");
     var label = tok(el, "--ep-chart-label", "#66738f");
     var suffix = cfg.valueSuffix || "";
-    if (type === "doughnut") return undefined;
+    // Circular and chrome-free types have no cartesian scales at all.
+    if (type === "doughnut" || type === "pie" || type === "gauge") return undefined;
+    if (type === "sparkline") {
+      return { x: { display: false }, y: { display: false } };
+    }
+    if (type === "scatter") {
+      var axis = function (title) {
+        return { type: "linear", grid: { color: grid, drawTicks: false },
+          border: { display: false },
+          title: title ? { display: true, text: title, color: label,
+            font: { size: 11, family: font } } : undefined,
+          ticks: { color: label, font: { size: 11, family: font }, padding: 8,
+            maxTicksLimit: 8, callback: function (v) { return fmtValue(v, ""); } } };
+      };
+      return { x: axis(cfg.xLabel), y: axis(cfg.yLabel) };
+    }
     if (type === "radar") {
       return { r: { grid: { color: grid }, angleLines: { color: grid },
         pointLabels: { color: label, font: { size: 11, family: font } },
@@ -130,6 +222,8 @@ export const CHARTS_RUNTIME = `
     return cfg.horizontal ? { x: value, y: category } : { x: category, y: value };
   }
 
+  if (window.Chart && window.Chart.register) { window.Chart.register(gaugeText, legendSpacing); }
+
   function render(el) {
     var canvas = el.querySelector("canvas");
     if (!canvas) return;
@@ -141,11 +235,11 @@ export const CHARTS_RUNTIME = `
     if (el.__epChart) { el.__epChart.destroy(); }
 
     var font = tok(el, "--ep-font-sans", "Inter, sans-serif");
-    var colors = palette(el);
+    var colors = (cfg.palette && cfg.palette.length) ? cfg.palette : palette(el);
     var single = (cfg.series || []).length < 2;
 
     el.__epChart = new window.Chart(canvas.getContext("2d"), {
-      type: type,
+      type: controllerFor(type),
       data: { labels: cfg.labels || [], datasets: datasets(type, cfg, colors, tok(el, "--ep-color-surface", "#ffffff")) },
       options: {
         responsive: true,
@@ -155,11 +249,21 @@ export const CHARTS_RUNTIME = `
         interaction: { mode: "index", intersect: false },
         // One series needs no legend — the chart title already names it.
         plugins: {
-          legend: (single && type !== "doughnut")
+          epGaugeText: type === "gauge" ? {
+            display: true,
+            value: fmtValue((((cfg.series || [])[0] || {}).values || [0])[0] || 0, cfg.valueSuffix),
+            label: cfg.gaugeLabel || "",
+            color: tok(el, "--ep-color-text", "#10163e"),
+            labelColor: tok(el, "--ep-chart-label", "#66738f"),
+            font: font, size: 30
+          } : { display: false },
+          legend: (type === "sparkline" || type === "gauge") ? { display: false }
+            : (single && type !== "doughnut" && type !== "pie")
             ? { display: false }
-            : { display: true, position: type === "doughnut" ? "right" : "top",
+            : { display: true, position: (type === "doughnut" || type === "pie") ? "right" : "top",
                 align: "start", labels: legend(type, font) },
           tooltip: {
+            enabled: type !== "gauge",
             backgroundColor: tok(el, "--ep-chart-tooltip-bg", "#10163e"),
             titleColor: tok(el, "--ep-chart-tooltip-text", "#ffffff"),
             bodyColor: tok(el, "--ep-chart-tooltip-text", "#ffffff"),

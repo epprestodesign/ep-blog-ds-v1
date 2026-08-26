@@ -578,7 +578,14 @@
     height: 320px;
 }
 .ep-chart[data-chart="doughnut"] .ep-chart__canvas-wrap,
+.ep-chart[data-chart="pie"] .ep-chart__canvas-wrap,
 .ep-chart[data-chart="radar"] .ep-chart__canvas-wrap { height: 340px; }
+/* A gauge is a half arc — the lower half of a square box is dead space. */
+.ep-chart[data-chart="gauge"] .ep-chart__canvas-wrap { height: 210px; }
+/* A sparkline is a shape inside a sentence, not a chart with a panel. */
+.ep-chart[data-chart="sparkline"] .ep-chart__canvas-wrap { height: 64px; margin-top: 10px; }
+.ep-chart[data-chart="sparkline"] { padding: 16px 18px 14px; }
+.ep-chart[data-chart="scatter"] .ep-chart__canvas-wrap { height: 360px; }
 .ep-chart canvas { display: block; }
 .ep-chart__source {
     margin: 14px 0 0;

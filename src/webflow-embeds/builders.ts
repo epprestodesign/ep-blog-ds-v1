@@ -376,17 +376,37 @@ ${caption ? `  <figcaption>${esc(caption)}</figcaption>\n` : ''}</figure>`,
    the rest of the blog on the next merge to main.
 =================================================================== */
 
-export type ChartType = 'line' | 'bar' | 'doughnut' | 'radar'
+export type ChartType =
+    | 'line'
+    | 'area'
+    | 'bar'
+    | 'doughnut'
+    | 'pie'
+    | 'radar'
+    | 'scatter'
+    | 'sparkline'
+    | 'gauge'
+
+/** A scatter point. `r` is only read by bubble-style plots. */
+export interface ChartPoint {
+    x: number
+    y: number
+    r?: number
+}
 
 export interface ChartSeries {
     label: string
-    values: number[]
+    /** Plain numbers for every type except scatter, which needs {x, y} pairs. */
+    values: number[] | ChartPoint[]
     /** Override the themed series color. Leave unset in almost every case. */
     color?: string
 }
 
 export interface ChartConfig {
-    labels: string[]
+    /** Category names along the value axis. Optional because scatter plots and
+     *  gauges have no categories — a scatter point carries its own x, and a
+     *  gauge is a single number. The runtime falls back to an empty array. */
+    labels?: string[]
     series: ChartSeries[]
     yMin?: number
     yMax?: number
@@ -394,6 +414,15 @@ export interface ChartConfig {
     valueSuffix?: string
     stacked?: boolean
     horizontal?: boolean
+    /** Scatter only — axis titles. A scatter plot without them is unreadable. */
+    xLabel?: string
+    yLabel?: string
+    /** Gauge only. `max` is the full sweep; `gaugeLabel` sits under the value. */
+    max?: number
+    gaugeLabel?: string
+    /** Override the themed series colours for this chart only. Use sparingly —
+     *  a chart with a bespoke palette stops tracking a rebrand. */
+    palette?: string[]
 }
 
 /** The config rides in a single-quoted attribute, so `'` is the character

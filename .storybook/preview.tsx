@@ -78,6 +78,8 @@ const preview: Preview = {
             'Spacing',
             'Typography',
           ],
+          'Color Explorations',
+          ['Overview'],
           'Embed Kit',
           ['Webflow Setup', 'Content Style Guide', 'Components', 'Charts'],
           'Editorial',
