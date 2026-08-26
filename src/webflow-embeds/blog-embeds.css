@@ -168,11 +168,15 @@
     border-top: 1px solid var(--ep-border);
     border-bottom: 1px solid var(--ep-border);
 }
-@media (min-width: 700px) {
+/* Breakpoints match Webflow's own (tablet 991, mobile landscape 767, mobile
+   portrait 479) so an embed reflows on the same beat as the page around it.
+   An embed with its own breakpoints reads as broken at the widths where the
+   two disagree, even though both are individually correct. */
+@media (min-width: 768px) {
     .ep-metrics[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
     .ep-metrics[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
 }
-@media (max-width: 520px) {
+@media (max-width: 479px) {
     .ep-metrics { grid-template-columns: 1fr; }
 }
 .ep-metric__value {
