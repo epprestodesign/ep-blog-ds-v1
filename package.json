@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "EventPipe blog design system \u2014 foundations, editorial components and data visualizations, authored in Storybook and shipped to a Webflow-hosted blog as copy-paste embeds.",
+  "description": "EventPipe blog design system — foundations, editorial components and data visualizations, authored in Storybook and shipped to a Webflow-hosted blog as copy-paste embeds.",
   "scripts": {
     "typecheck": "tsc -b",
     "storybook": "storybook dev -p 6008",
@@ -17,6 +17,10 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.3.1",
+    "@mui/x-charts": "^9.12.0",
     "@storybook/addon-a11y": "^10.5.0",
     "@storybook/addon-docs": "^10.5.0",
     "@storybook/react-vite": "^10.5.0",
