@@ -4,7 +4,7 @@ import { LineChart } from '@mui/x-charts/LineChart'
 import { PieChart } from '@mui/x-charts/PieChart'
 import { useRef, type ReactNode } from 'react'
 import { buildChartEmbed, type ChartConfig, type ChartType } from '../../webflow-embeds/builders'
-import { useChartsRuntime } from '../../webflow-embeds/use-charts-runtime'
+import { useEmbedHtml } from '../../webflow-embeds/use-charts-runtime'
 import { Section, Shell } from '../story-shell'
 import { MuiChartFrame, axisTextStyle, chartSx } from './mui-reference'
 
@@ -33,8 +33,8 @@ const TRIP_VALUES = [29100, 44600, 18200, 10400]
 function Embed({ type, config, title }: { type: ChartType; config: ChartConfig; title: string }) {
     const ref = useRef<HTMLDivElement>(null)
     const html = buildChartEmbed({ type, title, config })
-    useChartsRuntime(ref, [html])
-    return <div ref={ref} dangerouslySetInnerHTML={{ __html: html }} />
+    useEmbedHtml(ref, html)
+    return <div ref={ref} />
 }
 
 function Pair({ label, note, mui, embed }: { label: string; note?: string; mui: ReactNode; embed: ReactNode }) {
@@ -112,7 +112,7 @@ export const Reference: Story = {
 
                         <Pair
                             label="Bar"
-                            note="MUI X uses square corners and a wider default bar. Ours rounds to 3px and caps at 44px — a deliberate divergence, not a gap."
+                            note="MUI X squares the corners; ours round to 3px. Bar width now matches — the previous 44px cap left bars looking thin and detached from their labels."
                             mui={
                                 <BarChart
                                     height={320}
@@ -181,8 +181,8 @@ export const Reference: Story = {
                 <ul className="flex max-w-[76ch] flex-col gap-2 text-[13px] text-subtle">
                     <li>
                         <strong className="text-ink">Bar corners.</strong> MUI X squares them; the
-                        embed rounds to 3px and caps bar width at 44px, so a four-category chart
-                        does not become four billboards.
+                        embed rounds to 3px. Width is capped at 72px, which tracks MUI closely
+                        while still stopping a two-category chart becoming two billboards.
                     </li>
                     <li>
                         <strong className="text-ink">Line markers.</strong> Both hide points until
@@ -191,6 +191,17 @@ export const Reference: Story = {
                     <li>
                         <strong className="text-ink">Single-series legend.</strong> The embed drops
                         it entirely — the chart title already names the series. MUI X keeps it.
+                    </li>
+                    <li>
+                        <strong className="text-ink">Legend alignment.</strong> MUI X centres it;
+                        the embed left-aligns it under its own left-aligned panel title.
+                    </li>
+                    <li>
+                        <strong className="text-ink">Legend swatch.</strong> MUI X keys a line
+                        series with a dash. Chart.js sizes its <code>line</code> point style from
+                        <code>boxHeight</code>, not <code>boxWidth</code>, so the dash renders
+                        invisibly at legend scale — the embed uses circles throughout instead,
+                        which also matches its doughnut legend.
                     </li>
                     <li>
                         <strong className="text-ink">Panel chrome.</strong> The embed carries its own
