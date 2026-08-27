@@ -31,17 +31,17 @@ function read(el: Element, name: string, fallback: string): string {
 
 export function readEpTokens(el: Element = document.documentElement): EpTokens {
     return {
-        series: Array.from({ length: 8 }, (_, i) => read(el, `--ep-chart-${i + 1}`, '#00ADB3')),
-        grid: read(el, '--ep-chart-grid', '#D2DBE5'),
-        axis: read(el, '--ep-chart-axis', '#8C97AE'),
-        label: read(el, '--ep-chart-label', '#66738F'),
-        tooltipBg: read(el, '--ep-chart-tooltip-bg', '#10163E'),
+        series: Array.from({ length: 8 }, (_, i) => read(el, `--ep-chart-${i + 1}`, '#18B6C1')),
+        grid: read(el, '--ep-chart-grid', '#C6CED6'),
+        axis: read(el, '--ep-chart-axis', '#6B8196'),
+        label: read(el, '--ep-chart-label', '#1B3D5D'),
+        tooltipBg: read(el, '--ep-chart-tooltip-bg', '#0C1B2A'),
         tooltipText: read(el, '--ep-chart-tooltip-text', '#FFFFFF'),
-        text: read(el, '--ep-color-text', '#10163E'),
-        subtle: read(el, '--ep-color-text-subtle', '#66738F'),
+        text: read(el, '--ep-color-text', '#0C1B2A'),
+        subtle: read(el, '--ep-color-text-subtle', '#1B3D5D'),
         surface: read(el, '--ep-color-surface', '#FFFFFF'),
-        border: read(el, '--ep-color-border', '#D2DBE5'),
-        accent: read(el, '--ep-color-accent', '#00ADB3'),
+        border: read(el, '--ep-color-border', '#C6CED6'),
+        accent: read(el, '--ep-color-accent', '#18B6C1'),
         fontSans: read(el, '--ep-font-sans', 'Inter, sans-serif'),
     }
 }

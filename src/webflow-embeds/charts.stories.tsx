@@ -1,8 +1,30 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { Shell } from '../components/story-shell'
 import { buildChartEmbed, type ChartConfig, type ChartType } from './builders'
 import { EmbedPlayground } from './embed-playground'
+import { useEmbedHtml } from './use-charts-runtime'
+
+/**
+ * A chart rendered through the shipping runtime with no playground chrome —
+ * for pages that show many variants side by side, where a copy button and a
+ * code panel per chart would bury the comparison.
+ */
+function Embed({
+    type,
+    config,
+    title,
+    mode = 'light',
+}: {
+    type: ChartType
+    config: ChartConfig
+    title: string
+    mode?: 'light' | 'dark'
+}) {
+    const ref = useRef<HTMLDivElement>(null)
+    useEmbedHtml(ref, buildChartEmbed({ type, title, config }, mode))
+    return <div ref={ref} />
+}
 
 /**
  * The charts draw with the *shipped* runtime, not a React chart library — the
@@ -171,7 +193,7 @@ export const Doughnut: Story = {
 export const Radar: Story = {
     args: {
         title: 'Event profile comparison',
-        description: 'Two events of similar size, scored across six housing dimensions.',
+        description: 'Three event types scored across six housing dimensions. Each has a different shape, not just a different size.',
         source: 'Source: EventPipe reservation data, 2025–2026 season',
         mode: 'light',
     },
@@ -179,13 +201,40 @@ export const Radar: Story = {
         <ChartStory
             args={args}
             type="radar"
-            intro="For comparing two or three items across the same handful of dimensions. Rarely the right chart — reach for it only when the shape of the profile is the actual point."
+            intro={
+                <>
+                    For comparing a few items across the same handful of dimensions. It earns its
+                    place only when the <strong>shape</strong> is the point — when two profiles
+                    differ in kind rather than degree. The three event types below do: a youth
+                    tournament fills its block but books late and stays short; a trade show books
+                    far ahead and stays long but leaks to direct rates; a concert is almost pure
+                    late walk-up. Three genuinely different silhouettes, which is the only case
+                    where a radar beats a table.
+                    <br />
+                    <br />
+                    Colours are pulled from the palette by position — teal, magenta and golden amber —
+                    rather than the adjacent first two series, which are both cool and dark and sit
+                    almost on top of each other once the fills overlap.
+                </>
+            }
             config={{
-                labels: ['Block fill', 'Lead time', 'Trip length', 'Shoulder nights', 'Direct share', 'Rebooking'],
-                series: [
-                    { label: 'Crane Expo', values: [82, 64, 71, 55, 78, 61] },
-                    { label: 'Summit West', values: [61, 88, 49, 74, 52, 80] },
+                labels: [
+                    'Block fill',
+                    'Lead time',
+                    'Trip length',
+                    'Shoulder nights',
+                    'Direct share',
+                    'Rebooking',
                 ],
+                series: [
+                    { label: 'Youth tournament', values: [94, 22, 31, 18, 12, 71] },
+                    { label: 'Trade show', values: [48, 91, 84, 76, 68, 34] },
+                    { label: 'Concert', values: [26, 9, 14, 8, 88, 12] },
+                ],
+                // Positions 1, 3 and 4 — teal, magenta, amber. Chosen for
+                // separation rather than palette order, because a radar overlaps
+                // its fills and two cool hues become one shape.
+                palette: ['#18B6C1', '#E13D8F', '#E9A126'],
                 yMin: 0,
                 yMax: 100,
             }}
@@ -335,6 +384,94 @@ export const GaugeChart: Story = {
     ),
 }
 
+export const GaugeVariants: Story = {
+    name: 'Gauge — variants',
+    args: { mode: 'light' },
+    render: (args: any) => {
+        const base = { max: 100, valueSuffix: '%' }
+        const specs: { title: string; note: string; config: any }[] = [
+            {
+                title: 'Half arc · default',
+                note: '180° sweep, 72% cutout. The house default — a thin band that reads as a readout rather than a dial.',
+                config: { ...base, series: [{ label: 'Fill', values: [82] }], gaugeLabel: 'of contracted block' },
+            },
+            {
+                title: 'Half arc · heavy',
+                note: '55% cutout. The band carries more weight, which suits a gauge standing alone rather than in a row.',
+                config: { ...base, series: [{ label: 'Fill', values: [82] }], thickness: 55 },
+            },
+            {
+                title: 'Dial · 270°',
+                note: 'A wider sweep gives a low value more room to read as low. At 180° the difference between 12% and 20% is a sliver.',
+                config: { ...base, sweep: 270, series: [{ label: 'Fill', values: [82] }] },
+            },
+            {
+                title: 'Ring · 360°',
+                note: 'A full ring. Reads as a progress indicator rather than a measurement, so keep it for completion rather than performance.',
+                config: { ...base, sweep: 360, thickness: 68, series: [{ label: 'Fill', values: [82] }] },
+            },
+            {
+                title: 'Accent colour',
+                note: 'The track defaults to the series colour at 15%, so it stays tied to the value it belongs to.',
+                config: { ...base, palette: ['#E13D8F'], series: [{ label: 'Fill', values: [82] }] },
+            },
+            {
+                title: 'Explicit track',
+                note: 'A neutral track detaches the remainder from the value. Use when the shortfall is not itself meaningful.',
+                config: { ...base, palette: ['#E9A126'], trackColor: '#E4E8EC', series: [{ label: 'Fill', values: [82] }] },
+            },
+            {
+                title: 'Low value',
+                note: 'The case that exposes a gauge. At 14% there is almost no arc to read, and the number is doing all the work — which is the argument for writing the number in a sentence instead.',
+                config: { ...base, sweep: 270, series: [{ label: 'Fill', values: [14] }] },
+            },
+            {
+                title: 'Non-percentage scale',
+                note: 'max sets what a full arc means. Here the block is 12,000 room nights, so the arc is a fraction of a real quantity rather than a percentage.',
+                config: {
+                    max: 12000,
+                    series: [{ label: 'Picked up', values: [9840] }],
+                    gaugeLabel: 'of 12,000 room nights',
+                },
+            },
+        ]
+
+        return (
+            <Shell
+                title="Gauge variants"
+                wide
+                intro={
+                    <>
+                        A gauge carries one number against a maximum and nothing else — less
+                        information than the sentence it replaces. These are the levers worth
+                        having: <code>sweep</code> for arc span, <code>thickness</code> for the
+                        band, <code>palette</code> and <code>trackColor</code> for colour.
+                        <br />
+                        <br />
+                        The last two are the useful ones to look at. A low value at 180° is nearly
+                        unreadable, and a non-percentage <code>max</code> is what makes a gauge
+                        about a real quantity rather than a ratio.
+                    </>
+                }
+            >
+                <div className="grid gap-8 lg:grid-cols-2">
+                    {specs.map((spec) => (
+                        <div key={spec.title} className="flex flex-col gap-2">
+                            <div>
+                                <h3 className="text-[13.5px] font-semibold text-ink">{spec.title}</h3>
+                                <p className="mt-0.5 max-w-[52ch] text-[12.5px] leading-relaxed text-subtle">
+                                    {spec.note}
+                                </p>
+                            </div>
+                            <Embed type="gauge" title={spec.title} config={spec.config} mode={args.mode} />
+                        </div>
+                    ))}
+                </div>
+            </Shell>
+        )
+    },
+}
+
 export const Pie: Story = {
     args: {
         title: 'Share of room nights by trip length',
@@ -360,7 +497,7 @@ export const DarkCanvas: Story = {
     name: 'Dark canvas',
     args: {
         title: 'Room nights by month',
-        description: 'The same chart on the dark editorial canvas — no per-chart configuration.',
+        description: 'The same chart on the dark canvas — no per-chart configuration.',
         source: 'Source: EventPipe reservation data, 2025–2026 season',
         mode: 'dark',
     },

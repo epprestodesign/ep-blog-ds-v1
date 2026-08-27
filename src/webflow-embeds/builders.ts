@@ -424,9 +424,19 @@ export interface ChartConfig {
     yLabel?: string
     /** range-bar only — unit appended in the tooltip, e.g. ' nights'. */
     rangeUnit?: string
-    /** Gauge only. `max` is the full sweep; `gaugeLabel` sits under the value. */
+    /** Gauge only. `max` is the value at a full arc; `gaugeLabel` sits under
+     *  the readout. */
     max?: number
     gaugeLabel?: string
+    /** Gauge only — arc span in degrees. 180 (half, the default), 270 (dial),
+     *  or 360 (ring). Wider spans give a low value more room to read as low. */
+    sweep?: number
+    /** Gauge only — cutout as a percentage. Lower is a thicker band: 72 is the
+     *  default hairline dial, 55 reads as a heavy ring. */
+    thickness?: number
+    /** Gauge only — the unfilled remainder. Defaults to the series colour at
+     *  15%, which keeps the track tied to the value it belongs to. */
+    trackColor?: string
     /** Override the themed series colours for this chart only. Use sparingly —
      *  a chart with a bespoke palette stops tracking a rebrand. */
     palette?: string[]

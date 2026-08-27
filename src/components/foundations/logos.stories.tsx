@@ -61,7 +61,7 @@ export const Variants: Story = {
             <Section title="Wordmark">
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     <Chip label="Full color · on light surfaces" bg="var(--ep-color-surface)" src={logoColor} bordered />
-                    <Chip label="White · on the Midnight canvas and photography" bg="#10163E" src={logoWhite} />
+                    <Chip label="White · on the dark canvas and photography" bg="#09141E" src={logoWhite} />
                     <Chip label="Black · one-color contexts, print, watermarks" bg="var(--ep-color-surface)" src={logoBlack} bordered />
                 </div>
             </Section>
@@ -88,18 +88,18 @@ export const Variants: Story = {
                             <b className="text-[15px] font-semibold tracking-tight text-ink">EventPipe</b>
                             <span className="border-l border-line pl-3 text-[11px] text-subtle">Data</span>
                         </div>
-                        <div className="flex items-center gap-3 rounded-lg px-5 py-4" style={{ background: '#10163E' }}>
+                        <div className="flex items-center gap-3 rounded-lg px-5 py-4" style={{ background: '#09141E' }}>
                             <span className="flex items-center">
                                 {[
                                     { h: 22, o: 1, ml: 0 },
                                     { h: 15, o: 0.72, ml: 3 },
                                     { h: 9, o: 0.45, ml: 3 },
                                 ].map((b, i) => (
-                                    <i key={i} className="block w-[7px]" style={{ height: b.h, opacity: b.o, marginLeft: b.ml, background: '#00ADB3' }} />
+                                    <i key={i} className="block w-[7px]" style={{ height: b.h, opacity: b.o, marginLeft: b.ml, background: '#18B6C1' }} />
                                 ))}
                             </span>
                             <b className="text-[15px] font-semibold tracking-tight text-white">EventPipe</b>
-                            <span className="border-l border-[#2A3560] pl-3 text-[11px] text-[#94A3B8]">Data</span>
+                            <span className="border-l border-[#142E46] pl-3 text-[11px] text-[#A4B1BE]">Data</span>
                         </div>
                     </div>
                     <pre className="overflow-x-auto rounded-lg border border-line bg-surface-sunken px-4 py-3 font-mono text-[11.5px] leading-relaxed text-ink">

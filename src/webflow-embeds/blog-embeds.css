@@ -33,64 +33,68 @@
     --ep-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --ep-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
-    --ep-canvas: #f4f7f9;
+    --ep-canvas: #f1f3f5;
     --ep-surface: #ffffff;
-    --ep-sunken: #edf2f5;
-    --ep-text: #10163e;
-    --ep-subtle: #66738f;
-    --ep-subtlest: #8c97ae;
+    --ep-sunken: #e4e8ec;
+    --ep-text: #0c1b2a;
+    --ep-subtle: #1b3d5d;
+    --ep-subtlest: #6b8196;
     --ep-inverse: #ffffff;
-    --ep-border: #d2dbe5;
-    --ep-border-subtle: #e3eaf1;
-    --ep-accent: #00adb3;
-    --ep-accent-ink: #018e93;
-    --ep-accent-wash: #e6f8f8;
+    --ep-border: #c6ced6;
+    --ep-border-subtle: #e4e8ec;
+    /* The vivid series teal, for fills and rules only. */
+    --ep-accent: #18b6c1;
+    /* Text-safe teal — the accent is 2.5:1 on white and cannot carry type. */
+    --ep-accent-ink: #2e666a;
+    --ep-accent-wash: #f4fafa;
     --ep-accent-contrast: #ffffff;
 
-    --ep-harbor: #093e60;
-    --ep-harbor-wash: #eaf2f8;
-    --ep-amber: #b45309;
-    --ep-amber-wash: #fffbeb;
+    --ep-harbor: #396292;
+    --ep-harbor-wash: #eaf0f8;
+    --ep-amber: #795a26;
+    --ep-amber-wash: #f9f2e8;
 
-    --ep-chart-1: #00adb3;
-    --ep-chart-2: #093e60;
-    --ep-chart-3: #dc438c;
-    --ep-chart-4: #f79009;
-    --ep-chart-5: #515f94;
-    --ep-chart-6: #7a5af8;
-    --ep-chart-grid: #d2dbe5;
-    --ep-chart-label: #66738f;
+    --ep-chart-1: #18b6c1;
+    --ep-chart-2: #175a85;
+    --ep-chart-3: #e13d8f;
+    --ep-chart-4: #e9a126;
+    --ep-chart-5: #7657d6;
+    --ep-chart-6: #3da66b;
+    --ep-chart-7: #e96855;
+    --ep-chart-8: #438dda;
+    --ep-chart-9: #a65396;
+    --ep-chart-10: #e47d2d;
+    --ep-chart-grid: #c6ced6;
+    --ep-chart-label: #1b3d5d;
 
     --ep-radius: 4px;
     --ep-radius-lg: 12px;
 }
 
 .ep-blog[data-ep-mode="dark"] {
-    --ep-canvas: #10163e;
-    --ep-surface: #161d46;
-    --ep-sunken: #080b24;
-    --ep-text: #ffffff;
-    --ep-subtle: #94a3b8;
-    --ep-subtlest: #6b7a99;
-    --ep-inverse: #10163e;
-    --ep-border: #232c57;
-    --ep-border-subtle: #1a2047;
-    --ep-accent: #00adb3;
-    --ep-accent-ink: #56d2d5;
-    --ep-accent-wash: rgba(0, 173, 179, 0.12);
-    --ep-accent-contrast: #10163e;
+    --ep-canvas: #09141e;
+    --ep-surface: #0c1b2a;
+    --ep-sunken: #060e15;
+    --ep-text: #f1f3f5;
+    --ep-subtle: #a4b1be;
+    --ep-subtlest: #6b8196;
+    --ep-inverse: #09141e;
+    --ep-border: #142e46;
+    --ep-border-subtle: #102538;
+    --ep-accent: #18b6c1;
+    --ep-accent-ink: #b8dde0;
+    --ep-accent-wash: rgba(24, 182, 193, 0.14);
+    --ep-accent-contrast: #09141e;
 
-    --ep-harbor: #5fa1c4;
-    --ep-harbor-wash: rgba(95, 161, 196, 0.12);
-    --ep-amber: #fbbf24;
-    --ep-amber-wash: rgba(251, 191, 36, 0.12);
+    --ep-harbor: #b7cde7;
+    --ep-harbor-wash: rgba(183, 205, 231, 0.14);
+    --ep-amber: #e9d5b2;
+    --ep-amber-wash: rgba(233, 213, 178, 0.14);
 
-    --ep-chart-2: #56d2d5;
-    --ep-chart-4: #fbbf24;
-    --ep-chart-5: #7b87b4;
-    --ep-chart-6: #a78bfa;
-    --ep-chart-grid: #232c57;
-    --ep-chart-label: #94a3b8;
+    /* Series 2 is the darkest of the ten and vanishes on this canvas. */
+    --ep-chart-2: #a4b1be;
+    --ep-chart-grid: #142e46;
+    --ep-chart-label: #a4b1be;
 }
 
 .ep-blog[data-ep-brand="product"] {
