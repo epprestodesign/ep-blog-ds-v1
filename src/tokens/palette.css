@@ -1,315 +1,170 @@
 /* =============================================================
    Tier 1 — PRIMITIVES
-   Raw hue ramps. Nothing in this file carries meaning; components
-   and utilities must consume the Tier 2 semantic tokens instead.
+   Raw ramps. Nothing here carries meaning; components and utilities
+   consume the Tier 2 semantic roles in semantic.css instead.
 
-   Ramps below the divider are ported verbatim from the EventPipe
-   product design system (eventpipe-prototype-ds) so the blog and
-   the admin platform resolve to identical hexes where they overlap.
+   The blog palette is hand-authored rather than generated — ten hues
+   at eleven steps. It has no separate grey ramp because it does not
+   need one: navy is near-achromatic through its light steps (chroma
+   0.003 at 50, 0.014 at 200), so surfaces, borders and text all come
+   from it and stay inside the family.
    ============================================================= */
-/* Components must NOT use these directly; use the semantic --ep-color-* tokens. */
 :root {
 
-  /* red */
-  --ep-palette-red-50: #FEF2F2;
-  --ep-palette-red-100: #FEE2E2;
-  --ep-palette-red-200: #FECACA;
-  --ep-palette-red-300: #FCA5A5;
-  --ep-palette-red-400: #F87171;
-  --ep-palette-red-500: #EF4444;
-  --ep-palette-red-600: #DC2626;
-  --ep-palette-red-700: #B91C1C;
-  --ep-palette-red-800: #991B1B;
-  --ep-palette-red-900: #7F1D1D;
-  --ep-palette-red-950: #450A0A;
+  /* teal — Brand. Accent, links, focus, first chart series. */
+  --ep-palette-teal-50: #F4FAFA;
+  --ep-palette-teal-100: #EAF5F6;
+  --ep-palette-teal-200: #D2EAEC;
+  --ep-palette-teal-300: #B8DDE0;
+  --ep-palette-teal-400: #8BC8CC;
+  --ep-palette-teal-500: #4DAAB1;
+  --ep-palette-teal-600: #44969C;
+  --ep-palette-teal-700: #3A8085;
+  --ep-palette-teal-800: #2E666A;
+  --ep-palette-teal-900: #234C50;
+  --ep-palette-teal-950: #193639;
 
-  /* orange */
-  --ep-palette-orange-50: #FFF7ED;
-  --ep-palette-orange-100: #FFEDD5;
-  --ep-palette-orange-200: #FED7AA;
-  --ep-palette-orange-300: #FDBA74;
-  --ep-palette-orange-400: #FB923C;
-  --ep-palette-orange-500: #F97316;
-  --ep-palette-orange-600: #EA580C;
-  --ep-palette-orange-700: #C2410C;
-  --ep-palette-orange-800: #9A3412;
-  --ep-palette-orange-900: #7C2D12;
-  --ep-palette-orange-950: #431407;
+  /* navy — Neutral. Near-achromatic at the light end (chroma 0.003 at 50), so it carries every surface, border and text role without leaving the palette. */
+  --ep-palette-navy-50: #F1F3F5;
+  --ep-palette-navy-100: #E4E8EC;
+  --ep-palette-navy-200: #C6CED6;
+  --ep-palette-navy-300: #A4B1BE;
+  --ep-palette-navy-400: #6B8196;
+  --ep-palette-navy-500: #1B3D5D;
+  --ep-palette-navy-600: #183652;
+  --ep-palette-navy-700: #142E46;
+  --ep-palette-navy-800: #102538;
+  --ep-palette-navy-900: #0C1B2A;
+  --ep-palette-navy-950: #09141E;
 
-  /* amber */
-  --ep-palette-amber-50: #FFFBEB;
-  --ep-palette-amber-100: #FEF3C7;
-  --ep-palette-amber-200: #FDE68A;
-  --ep-palette-amber-300: #FCD34D;
-  --ep-palette-amber-400: #FBBF24;
-  --ep-palette-amber-500: #F59E0B;
-  --ep-palette-amber-600: #D97706;
-  --ep-palette-amber-700: #B45309;
-  --ep-palette-amber-800: #92400E;
-  --ep-palette-amber-900: #78350F;
-  --ep-palette-amber-950: #451A03;
+  /* magenta — Second chart series. Also the emphasis hue for editorial pull-outs. */
+  --ep-palette-magenta-50: #FCF4F8;
+  --ep-palette-magenta-100: #F9EAF1;
+  --ep-palette-magenta-200: #F2D3E2;
+  --ep-palette-magenta-300: #EAB9D0;
+  --ep-palette-magenta-400: #DD8DB3;
+  --ep-palette-magenta-500: #CB4F8A;
+  --ep-palette-magenta-600: #B34679;
+  --ep-palette-magenta-700: #983B68;
+  --ep-palette-magenta-800: #7A2F53;
+  --ep-palette-magenta-900: #5B243E;
+  --ep-palette-magenta-950: #41192C;
 
-  /* yellow */
-  --ep-palette-yellow-50: #FEFCE8;
-  --ep-palette-yellow-100: #FEF9C3;
-  --ep-palette-yellow-200: #FEF08A;
-  --ep-palette-yellow-300: #FDE047;
-  --ep-palette-yellow-400: #FACC15;
-  --ep-palette-yellow-500: #EAB308;
-  --ep-palette-yellow-600: #CA8A04;
-  --ep-palette-yellow-700: #A16207;
-  --ep-palette-yellow-800: #854D0E;
-  --ep-palette-yellow-900: #713F12;
-  --ep-palette-yellow-950: #422006;
+  /* gold — Warning, and the warm chart series. */
+  --ep-palette-gold-50: #FCF9F3;
+  --ep-palette-gold-100: #F9F2E8;
+  --ep-palette-gold-200: #F2E5CF;
+  --ep-palette-gold-300: #E9D5B2;
+  --ep-palette-gold-400: #DCBB82;
+  --ep-palette-gold-500: #C9963F;
+  --ep-palette-gold-600: #B18437;
+  --ep-palette-gold-700: #97702F;
+  --ep-palette-gold-800: #795A26;
+  --ep-palette-gold-900: #5A441C;
+  --ep-palette-gold-950: #403014;
 
-  /* lime */
-  --ep-palette-lime-50: #F7FEE7;
-  --ep-palette-lime-100: #ECFCCB;
-  --ep-palette-lime-200: #D9F99D;
-  --ep-palette-lime-300: #BEF264;
-  --ep-palette-lime-400: #A3E635;
-  --ep-palette-lime-500: #84CC16;
-  --ep-palette-lime-600: #65A30D;
-  --ep-palette-lime-700: #4D7C0F;
-  --ep-palette-lime-800: #3F6212;
-  --ep-palette-lime-900: #365314;
-  --ep-palette-lime-950: #1A2E05;
+  /* violet — Chart series. */
+  --ep-palette-violet-50: #F7F5FA;
+  --ep-palette-violet-100: #EEECF6;
+  --ep-palette-violet-200: #DCD7EC;
+  --ep-palette-violet-300: #C8BFE1;
+  --ep-palette-violet-400: #A598CE;
+  --ep-palette-violet-500: #7560B3;
+  --ep-palette-violet-600: #67549E;
+  --ep-palette-violet-700: #584886;
+  --ep-palette-violet-800: #463A6B;
+  --ep-palette-violet-900: #352B51;
+  --ep-palette-violet-950: #251F39;
 
-  /* green */
-  --ep-palette-green-50: #F0FDF4;
-  --ep-palette-green-100: #DCFCE7;
-  --ep-palette-green-200: #BBF7D0;
-  --ep-palette-green-300: #86EFAC;
-  --ep-palette-green-400: #4ADE80;
-  --ep-palette-green-500: #22C55E;
-  --ep-palette-green-600: #16A34A;
-  --ep-palette-green-700: #15803D;
-  --ep-palette-green-800: #166534;
-  --ep-palette-green-900: #14532D;
-  --ep-palette-green-950: #052E16;
+  /* green — Success, and the chart series. */
+  --ep-palette-green-50: #F5F9F6;
+  --ep-palette-green-100: #EBF2ED;
+  --ep-palette-green-200: #D5E4DA;
+  --ep-palette-green-300: #BCD5C3;
+  --ep-palette-green-400: #92BA9E;
+  --ep-palette-green-500: #57956A;
+  --ep-palette-green-600: #4D835D;
+  --ep-palette-green-700: #417050;
+  --ep-palette-green-800: #345940;
+  --ep-palette-green-900: #274330;
+  --ep-palette-green-950: #1C3022;
 
-  /* emerald */
-  --ep-palette-emerald-50: #ECFDF5;
-  --ep-palette-emerald-100: #D1FAE5;
-  --ep-palette-emerald-200: #A7F3D0;
-  --ep-palette-emerald-300: #6EE7B7;
-  --ep-palette-emerald-400: #34D399;
-  --ep-palette-emerald-500: #10B981;
-  --ep-palette-emerald-600: #059669;
-  --ep-palette-emerald-700: #047857;
-  --ep-palette-emerald-800: #065F46;
-  --ep-palette-emerald-900: #064E3B;
-  --ep-palette-emerald-950: #022C22;
+  /* coral — Danger, and the chart series. */
+  --ep-palette-coral-50: #FCF6F5;
+  --ep-palette-coral-100: #F9EDEB;
+  --ep-palette-coral-200: #F3DAD6;
+  --ep-palette-coral-300: #EBC4BD;
+  --ep-palette-coral-400: #DF9F94;
+  --ep-palette-coral-500: #CE6C5B;
+  --ep-palette-coral-600: #B55F50;
+  --ep-palette-coral-700: #9A5144;
+  --ep-palette-coral-800: #7C4137;
+  --ep-palette-coral-900: #5D3129;
+  --ep-palette-coral-950: #42231D;
 
-  /* teal */
-  --ep-palette-teal-50: #F0FDFA;
-  --ep-palette-teal-100: #CCFBF1;
-  --ep-palette-teal-200: #99F6E4;
-  --ep-palette-teal-300: #5EEAD4;
-  --ep-palette-teal-400: #2DD4BF;
-  --ep-palette-teal-500: #14B8A6;
-  --ep-palette-teal-600: #0D9488;
-  --ep-palette-teal-700: #0F766E;
-  --ep-palette-teal-800: #115E59;
-  --ep-palette-teal-900: #134E4A;
-  --ep-palette-teal-950: #042F2E;
+  /* sky — Info, and the chart series. */
+  --ep-palette-sky-50: #F4F8FB;
+  --ep-palette-sky-100: #EAF0F8;
+  --ep-palette-sky-200: #D2E0F0;
+  --ep-palette-sky-300: #B7CDE7;
+  --ep-palette-sky-400: #8BAED8;
+  --ep-palette-sky-500: #4C82C3;
+  --ep-palette-sky-600: #4372AC;
+  --ep-palette-sky-700: #396292;
+  --ep-palette-sky-800: #2E4E75;
+  --ep-palette-sky-900: #223A58;
+  --ep-palette-sky-950: #182A3E;
 
-  /* cyan */
-  --ep-palette-cyan-50: #ECFEFF;
-  --ep-palette-cyan-100: #CFFAFE;
-  --ep-palette-cyan-200: #A5F3FC;
-  --ep-palette-cyan-300: #67E8F9;
-  --ep-palette-cyan-400: #22D3EE;
-  --ep-palette-cyan-500: #06B6D4;
-  --ep-palette-cyan-600: #0891B2;
-  --ep-palette-cyan-700: #0E7490;
-  --ep-palette-cyan-800: #155E75;
-  --ep-palette-cyan-900: #164E63;
-  --ep-palette-cyan-950: #083344;
+  /* plum — Chart series. */
+  --ep-palette-plum-50: #F8F5F7;
+  --ep-palette-plum-100: #F1EBEF;
+  --ep-palette-plum-200: #E2D6DD;
+  --ep-palette-plum-300: #D1BDC9;
+  --ep-palette-plum-400: #B494A7;
+  --ep-palette-plum-500: #8B5A78;
+  --ep-palette-plum-600: #7A4F6A;
+  --ep-palette-plum-700: #68445A;
+  --ep-palette-plum-800: #533648;
+  --ep-palette-plum-900: #3F2836;
+  --ep-palette-plum-950: #2C1D26;
 
-  /* sky */
-  --ep-palette-sky-50: #F0F9FF;
-  --ep-palette-sky-100: #E0F2FE;
-  --ep-palette-sky-200: #BAE6FD;
-  --ep-palette-sky-300: #7DD3FC;
-  --ep-palette-sky-400: #38BDF8;
-  --ep-palette-sky-500: #0EA5E9;
-  --ep-palette-sky-600: #0284C7;
-  --ep-palette-sky-700: #0369A1;
-  --ep-palette-sky-800: #075985;
-  --ep-palette-sky-900: #0C4A6E;
-  --ep-palette-sky-950: #082F49;
+  /* orange — Chart series. */
+  --ep-palette-orange-50: #FCF7F3;
+  --ep-palette-orange-100: #F8EFE8;
+  --ep-palette-orange-200: #F1DDCF;
+  --ep-palette-orange-300: #E9C9B2;
+  --ep-palette-orange-400: #DBA782;
+  --ep-palette-orange-500: #C7773E;
+  --ep-palette-orange-600: #AF6937;
+  --ep-palette-orange-700: #95592E;
+  --ep-palette-orange-800: #774725;
+  --ep-palette-orange-900: #5A361C;
+  --ep-palette-orange-950: #402614;
 
-  /* blue */
-  --ep-palette-blue-50: #EFF6FF;
-  --ep-palette-blue-100: #DBEAFE;
-  --ep-palette-blue-200: #BFDBFE;
-  --ep-palette-blue-300: #93C5FD;
-  --ep-palette-blue-400: #60A5FA;
-  --ep-palette-blue-500: #3B82F6;
-  --ep-palette-blue-600: #2563EB;
-  --ep-palette-blue-700: #1D4ED8;
-  --ep-palette-blue-800: #1E40AF;
-  --ep-palette-blue-900: #1E3A8A;
-  --ep-palette-blue-950: #172554;
+  /* Data-visualization series, in the order a chart consumes them.
+     These are the vivid values, distinct from each ramp's 500 step —
+     a chart fill wants more chroma than a UI surface does. */
+  --ep-palette-series-1: #18B6C1; /* Bright Teal */
+  --ep-palette-series-2: #175A85; /* Bright Navy */
+  --ep-palette-series-3: #E13D8F; /* Vibrant Magenta */
+  --ep-palette-series-4: #E9A126; /* Golden Amber */
+  --ep-palette-series-5: #7657D6; /* Electric Violet */
+  --ep-palette-series-6: #3DA66B; /* Emerald Green */
+  --ep-palette-series-7: #E96855; /* Coral */
+  --ep-palette-series-8: #438DDA; /* Bright Blue */
+  --ep-palette-series-9: #A65396; /* Orchid / Plum */
+  --ep-palette-series-10: #E47D2D; /* Orange */
+}
 
-  /* indigo */
-  --ep-palette-indigo-50: #EEF2FF;
-  --ep-palette-indigo-100: #E0E7FF;
-  --ep-palette-indigo-200: #C7D2FE;
-  --ep-palette-indigo-300: #A5B4FC;
-  --ep-palette-indigo-400: #818CF8;
-  --ep-palette-indigo-500: #6366F1;
-  --ep-palette-indigo-600: #4F46E5;
-  --ep-palette-indigo-700: #4338CA;
-  --ep-palette-indigo-800: #3730A3;
-  --ep-palette-indigo-900: #312E81;
-  --ep-palette-indigo-950: #1E1B4B;
-
-  /* violet */
-  --ep-palette-violet-50: #F5F3FF;
-  --ep-palette-violet-100: #EDE9FE;
-  --ep-palette-violet-200: #DDD6FE;
-  --ep-palette-violet-300: #C4B5FD;
-  --ep-palette-violet-400: #A78BFA;
-  --ep-palette-violet-500: #8B5CF6;
-  --ep-palette-violet-600: #7C3AED;
-  --ep-palette-violet-700: #6D28D9;
-  --ep-palette-violet-800: #5B21B6;
-  --ep-palette-violet-900: #4C1D95;
-  --ep-palette-violet-950: #2E1065;
-
-  /* purple */
-  --ep-palette-purple-50: #FAF5FF;
-  --ep-palette-purple-100: #F3E8FF;
-  --ep-palette-purple-200: #E9D5FF;
-  --ep-palette-purple-300: #D8B4FE;
-  --ep-palette-purple-400: #C084FC;
-  --ep-palette-purple-500: #A855F7;
-  --ep-palette-purple-600: #9333EA;
-  --ep-palette-purple-700: #7E22CE;
-  --ep-palette-purple-800: #6B21A8;
-  --ep-palette-purple-900: #581C87;
-  --ep-palette-purple-950: #3B0764;
-
-  /* fuchsia */
-  --ep-palette-fuchsia-50: #FDF4FF;
-  --ep-palette-fuchsia-100: #FAE8FF;
-  --ep-palette-fuchsia-200: #F5D0FE;
-  --ep-palette-fuchsia-300: #F0ABFC;
-  --ep-palette-fuchsia-400: #E879F9;
-  --ep-palette-fuchsia-500: #D946EF;
-  --ep-palette-fuchsia-600: #C026D3;
-  --ep-palette-fuchsia-700: #A21CAF;
-  --ep-palette-fuchsia-800: #86198F;
-  --ep-palette-fuchsia-900: #701A75;
-  --ep-palette-fuchsia-950: #4A044E;
-
-  /* pink */
-  --ep-palette-pink-50: #FDF2F8;
-  --ep-palette-pink-100: #FCE7F3;
-  --ep-palette-pink-200: #FBCFE8;
-  --ep-palette-pink-300: #F9A8D4;
-  --ep-palette-pink-400: #F472B6;
-  --ep-palette-pink-500: #EC4899;
-  --ep-palette-pink-600: #DB2777;
-  --ep-palette-pink-700: #BE185D;
-  --ep-palette-pink-800: #9D174D;
-  --ep-palette-pink-900: #831843;
-  --ep-palette-pink-950: #500724;
-
-  /* rose */
-  --ep-palette-rose-50: #FFF1F2;
-  --ep-palette-rose-100: #FFE4E6;
-  --ep-palette-rose-200: #FECDD3;
-  --ep-palette-rose-300: #FDA4AF;
-  --ep-palette-rose-400: #FB7185;
-  --ep-palette-rose-500: #F43F5E;
-  --ep-palette-rose-600: #E11D48;
-  --ep-palette-rose-700: #BE123C;
-  --ep-palette-rose-800: #9F1239;
-  --ep-palette-rose-900: #881337;
-  --ep-palette-rose-950: #4C0519;
-
-  /* slate */
-  --ep-palette-slate-50: #F8FAFC;
-  --ep-palette-slate-100: #F1F5F9;
-  --ep-palette-slate-200: #E2E8F0;
-  --ep-palette-slate-300: #CBD5E1;
-  --ep-palette-slate-400: #94A3B8;
-  --ep-palette-slate-500: #64748B;
-  --ep-palette-slate-600: #475569;
-  --ep-palette-slate-700: #334155;
-  --ep-palette-slate-800: #1E293B;
-  --ep-palette-slate-900: #0F172A;
-  --ep-palette-slate-950: #020617;
-
-  /* gray */
-  --ep-palette-gray-50: #F9FAFB;
-  --ep-palette-gray-100: #F3F4F6;
-  --ep-palette-gray-200: #E5E7EB;
-  --ep-palette-gray-300: #D1D5DB;
-  --ep-palette-gray-400: #9CA3AF;
-  --ep-palette-gray-500: #6B7280;
-  --ep-palette-gray-600: #4B5563;
-  --ep-palette-gray-700: #374151;
-  --ep-palette-gray-800: #1F2937;
-  --ep-palette-gray-900: #111827;
-  --ep-palette-gray-950: #030712;
-
-  /* zinc */
-  --ep-palette-zinc-50: #FAFAFA;
-  --ep-palette-zinc-100: #F4F4F5;
-  --ep-palette-zinc-200: #E4E4E7;
-  --ep-palette-zinc-300: #D4D4D8;
-  --ep-palette-zinc-400: #A1A1AA;
-  --ep-palette-zinc-500: #71717A;
-  --ep-palette-zinc-600: #52525B;
-  --ep-palette-zinc-700: #3F3F46;
-  --ep-palette-zinc-800: #27272A;
-  --ep-palette-zinc-900: #18181B;
-  --ep-palette-zinc-950: #09090B;
-
-  /* neutral */
-  --ep-palette-neutral-50: #FAFAFA;
-  --ep-palette-neutral-100: #F5F5F5;
-  --ep-palette-neutral-200: #E5E5E5;
-  --ep-palette-neutral-300: #D4D4D4;
-  --ep-palette-neutral-400: #A3A3A3;
-  --ep-palette-neutral-500: #737373;
-  --ep-palette-neutral-600: #525252;
-  --ep-palette-neutral-700: #404040;
-  --ep-palette-neutral-800: #262626;
-  --ep-palette-neutral-900: #171717;
-  --ep-palette-neutral-950: #0A0A0A;
-
-  /* stone */
-  --ep-palette-stone-50: #FAFAF9;
-  --ep-palette-stone-100: #F5F5F4;
-  --ep-palette-stone-200: #E7E5E4;
-  --ep-palette-stone-300: #D6D3D1;
-  --ep-palette-stone-400: #A8A29E;
-  --ep-palette-stone-500: #78716C;
-  --ep-palette-stone-600: #57534E;
-  --ep-palette-stone-700: #44403C;
-  --ep-palette-stone-800: #292524;
-  --ep-palette-stone-900: #1C1917;
-  --ep-palette-stone-950: #0C0A09;
-
-  /* navy — app chrome / sidebar ramp, anchored on #00123D (900). Hue ~224°. */
-  --ep-palette-navy-50: #EEF1F8;
-  --ep-palette-navy-100: #D5DCEC;
-  --ep-palette-navy-200: #ADBAD8;
-  --ep-palette-navy-300: #7C8DBE;
-  --ep-palette-navy-400: #4E63A0;
-  --ep-palette-navy-500: #2C4380;
-  --ep-palette-navy-600: #1B2F63;
-  --ep-palette-navy-700: #16265C;
-  --ep-palette-navy-800: #0B1A4C;
-  --ep-palette-navy-900: #00123D;
-  --ep-palette-navy-950: #030A26;
-
-  /* azure — EventPipe brand / primary-action ramp, anchored on #1876D2 (600).
+/* =============================================================
+   PRODUCT ramps — for data-ep-brand="product" only.
+   Ported from eventpipe-prototype-ds so a post embedding real admin UI
+   renders in the platform's own colours. The prototype's `navy` is
+   renamed `chrome` here, because the blog palette has a navy of its own
+   and two ramps cannot share a name.
+   ============================================================= */
+:root {
+/* azure — EventPipe brand / primary-action ramp, anchored on #1876D2 (600).
      Hue ~209°. Drives CTAs, selected states, focus rings, links. */
   --ep-palette-azure-50: #E8F1FB;
   --ep-palette-azure-100: #C8DFF6;
@@ -322,8 +177,7 @@
   --ep-palette-azure-800: #114F8E;
   --ep-palette-azure-900: #0D3D6E;
   --ep-palette-azure-950: #08284A;
-
-  /* graphite — EventPipe neutral ramp, anchored on #8C92A0 (500). Cool gray,
+/* graphite — EventPipe neutral ramp, anchored on #8C92A0 (500). Cool gray,
      hue ~222°. Replaces Slate for text, icons, borders, neutral surfaces. */
   --ep-palette-graphite-50: #F6F7F8;
   --ep-palette-graphite-100: #ECEEF0;
@@ -336,187 +190,16 @@
   --ep-palette-graphite-800: #3D414A;
   --ep-palette-graphite-900: #262930;
   --ep-palette-graphite-950: #15171B;
-}
-
-/* =============================================================
-   EventPipe marketing ramps — anchored on the hexes used by the
-   editorial visualizations in references/. These are the blog's
-   own brand hues; the product DS does not carry them.
-   ============================================================= */
-:root {
-
-  /* brand — EventPipe marketing teal, anchored on #00ADB3 (600).
-     Hue ~183°. Drives accents, eyebrows, chart series 1, links. */
-  --ep-palette-brand-50: #E6F8F8;
-  --ep-palette-brand-100: #C0EEEF;
-  --ep-palette-brand-200: #8FE1E3;
-  --ep-palette-brand-300: #56D2D5;
-  --ep-palette-brand-400: #22C2C6;
-  --ep-palette-brand-500: #06B3B8;
-  --ep-palette-brand-600: #00ADB3;
-  --ep-palette-brand-700: #018E93;
-  --ep-palette-brand-800: #036F73;
-  --ep-palette-brand-900: #045255;
-  --ep-palette-brand-950: #03393B;
-
-  /* midnight — editorial canvas + ink, anchored on #10163E (900).
-     Hue ~232°. The dark-mode surface AND the light-mode text color,
-     which is what gives the blog its single-hue editorial feel. */
-  --ep-palette-midnight-50: #EEF0F7;
-  --ep-palette-midnight-100: #D3D8E9;
-  --ep-palette-midnight-200: #ABB3D2;
-  --ep-palette-midnight-300: #7B87B4;
-  --ep-palette-midnight-400: #515F94;
-  --ep-palette-midnight-500: #364275;
-  --ep-palette-midnight-600: #26305C;
-  --ep-palette-midnight-700: #1D2650;
-  --ep-palette-midnight-800: #161D46;
-  --ep-palette-midnight-900: #10163E;
-  --ep-palette-midnight-950: #080B24;
-
-  /* harbor — the secondary editorial blue (#093E60), used for tooltip
-     and inset surfaces on the dark canvas. Hue ~204°. */
-  --ep-palette-harbor-50: #EAF2F8;
-  --ep-palette-harbor-100: #C8DEEC;
-  --ep-palette-harbor-200: #97C2DA;
-  --ep-palette-harbor-300: #5FA1C4;
-  --ep-palette-harbor-400: #2F80A9;
-  --ep-palette-harbor-500: #14638A;
-  --ep-palette-harbor-600: #0D5279;
-  --ep-palette-harbor-700: #0A466B;
-  --ep-palette-harbor-800: #093E60;
-  --ep-palette-harbor-900: #072F49;
-  --ep-palette-harbor-950: #041E2F;
-}
-
-/* =============================================================
-   HARMONY RAMPS — derived from the brand teal #00AEB3
-
-   Generated by rotating hue in OKLCH, not HSL. Equal-HSL hues have wildly
-   unequal perceived lightness — an HSL-rotated yellow reads far darker than
-   its teal source — which makes chart series look weighted when they are not.
-   Rotating in OKLCH holds perceived lightness and chroma constant, so every
-   ramp below is a true sibling of the brand: identical L, identical C, hue
-   alone changes.
-
-   Every ramp shares one lightness curve anchored on the brand at step 600,
-   so equivalent steps are interchangeable across hues. Out-of-gamut steps
-   have chroma reduced until they fit sRGB rather than being RGB-clipped,
-   which would shift the hue and break the harmony.
-
-   Contrast is therefore uniform across the whole set: 800/900/950 clear
-   4.5:1 on white, and 25-600 clear it on the Midnight canvas.
-   ============================================================= */
-:root {
-
-  /* coral — Complement of the brand (198° → 18°).
-    Directly opposite the brand teal. The strongest possible contrast
-    against it — use when two things must not be confused. */
-  --ep-palette-coral-25: #FFF7F7;
-  --ep-palette-coral-50: #FFEEEE;
-  --ep-palette-coral-100: #FDE0DF;
-  --ep-palette-coral-200: #FACBCB;
-  --ep-palette-coral-300: #F4B3B3;
-  --ep-palette-coral-400: #EC9C9D;
-  --ep-palette-coral-500: #E2898B;
-  --ep-palette-coral-600: #D77A7D;
-  --ep-palette-coral-700: #BD6266;
-  --ep-palette-coral-800: #A04E52;
-  --ep-palette-coral-900: #813C40;
-  --ep-palette-coral-950: #5A272A;
-
-  /* rose — Split-complement of the brand (198° → 348°).
-    Softer opposition than coral. Pairs with the brand without the head-on
-    clash of a true complement. */
-  --ep-palette-rose-25: #FFF6FA;
-  --ep-palette-rose-50: #FDEEF5;
-  --ep-palette-rose-100: #FAE0EB;
-  --ep-palette-rose-200: #F4CBDE;
-  --ep-palette-rose-300: #EDB2CE;
-  --ep-palette-rose-400: #E39CBF;
-  --ep-palette-rose-500: #D989B1;
-  --ep-palette-rose-600: #CD7AA5;
-  --ep-palette-rose-700: #B3638D;
-  --ep-palette-rose-800: #984F75;
-  --ep-palette-rose-900: #7A3D5E;
-  --ep-palette-rose-950: #552740;
-
-  /* ember — Split-complement of the brand (198° → 48°).
-    The warm half of the split. Reads as the natural "other side" of a
-    teal chart. */
-  --ep-palette-ember-25: #FFF7F4;
-  --ep-palette-ember-50: #FEEFE8;
-  --ep-palette-ember-100: #FBE2D5;
-  --ep-palette-ember-200: #F7CEBA;
-  --ep-palette-ember-300: #F0B89B;
-  --ep-palette-ember-400: #E8A27E;
-  --ep-palette-ember-500: #DE9067;
-  --ep-palette-ember-600: #D28256;
-  --ep-palette-ember-700: #B86A3F;
-  --ep-palette-ember-800: #9C562E;
-  --ep-palette-ember-900: #7E4220;
-  --ep-palette-ember-950: #582B11;
-
-  /* jade — Analogous of the brand (198° → 168°).
-    One step green of the brand. Close enough to feel related, far enough
-    to separate in a chart. */
-  --ep-palette-jade-25: #F3FBF8;
-  --ep-palette-jade-50: #E8F7F0;
-  --ep-palette-jade-100: #D4EFE4;
-  --ep-palette-jade-200: #B7E4D2;
-  --ep-palette-jade-300: #94D7BD;
-  --ep-palette-jade-400: #72C9AA;
-  --ep-palette-jade-500: #54BC99;
-  --ep-palette-jade-600: #3DAF8C;
-  --ep-palette-jade-700: #199775;
-  --ep-palette-jade-800: #007E60;
-  --ep-palette-jade-900: #00644B;
-  --ep-palette-jade-950: #004432;
-
-  /* cobalt — Analogous of the brand (198° → 228°).
-    One step blue of the brand. The safest second series when the first is
-    teal. */
-  --ep-palette-cobalt-25: #F2FBFF;
-  --ep-palette-cobalt-50: #E7F6FD;
-  --ep-palette-cobalt-100: #D3EDF9;
-  --ep-palette-cobalt-200: #B4E0F4;
-  --ep-palette-cobalt-300: #91D0EE;
-  --ep-palette-cobalt-400: #6EC1E5;
-  --ep-palette-cobalt-500: #4FB3DC;
-  --ep-palette-cobalt-600: #37A6D1;
-  --ep-palette-cobalt-700: #0D8EB8;
-  --ep-palette-cobalt-800: #00759A;
-  --ep-palette-cobalt-900: #005D7B;
-  --ep-palette-cobalt-950: #003F55;
-
-  /* orchid — Triadic of the brand (198° → 318°).
-    Balanced third point. Distinct from both the brand and its complement. */
-  --ep-palette-orchid-25: #FCF7FE;
-  --ep-palette-orchid-50: #F8EFFB;
-  --ep-palette-orchid-100: #F1E1F6;
-  --ep-palette-orchid-200: #E8CEEF;
-  --ep-palette-orchid-300: #DCB7E6;
-  --ep-palette-orchid-400: #CFA1DD;
-  --ep-palette-orchid-500: #C38FD2;
-  --ep-palette-orchid-600: #B781C7;
-  --ep-palette-orchid-700: #9E6AAE;
-  --ep-palette-orchid-800: #855593;
-  --ep-palette-orchid-900: #6B4276;
-  --ep-palette-orchid-950: #4A2B52;
-
-  /* citron — Triadic of the brand (198° → 78°).
-    The warm third point. Lowest chroma headroom of the set — verify
-    before using it on a light surface. */
-  --ep-palette-citron-25: #FDF8F1;
-  --ep-palette-citron-50: #FAF2E5;
-  --ep-palette-citron-100: #F4E6D0;
-  --ep-palette-citron-200: #ECD5B1;
-  --ep-palette-citron-300: #E1C18E;
-  --ep-palette-citron-400: #D6AE6C;
-  --ep-palette-citron-500: #CB9D4F;
-  --ep-palette-citron-600: #BF8F3B;
-  --ep-palette-citron-700: #A7781D;
-  --ep-palette-citron-800: #8C6206;
-  --ep-palette-citron-900: #704D00;
-  --ep-palette-citron-950: #4D3400;
+/* chrome — app chrome / sidebar ramp, anchored on #00123D (900). Hue ~224°. */
+  --ep-palette-chrome-50: #EEF1F8;
+  --ep-palette-chrome-100: #D5DCEC;
+  --ep-palette-chrome-200: #ADBAD8;
+  --ep-palette-chrome-300: #7C8DBE;
+  --ep-palette-chrome-400: #4E63A0;
+  --ep-palette-chrome-500: #2C4380;
+  --ep-palette-chrome-600: #1B2F63;
+  --ep-palette-chrome-700: #16265C;
+  --ep-palette-chrome-800: #0B1A4C;
+  --ep-palette-chrome-900: #00123D;
+  --ep-palette-chrome-950: #030A26;
 }

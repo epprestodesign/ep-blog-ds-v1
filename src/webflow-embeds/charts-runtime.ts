@@ -37,7 +37,7 @@ export const CHARTS_RUNTIME = `
 
   function palette(el) {
     var out = [];
-    for (var i = 1; i <= 6; i++) out.push(tok(el, "--ep-chart-" + i, "#00adb3"));
+    for (var i = 1; i <= 6; i++) out.push(tok(el, "--ep-chart-" + i, "#18b6c1"));
     return out;
   }
 
@@ -150,12 +150,19 @@ export const CHARTS_RUNTIME = `
     for (var i = 0; i < series.length; i++) {
       var c = series[i].color || colors[i % colors.length];
       if (type === "gauge") {
-        // Two segments: the value, then the remainder drawn in a neutral track.
+        // Two segments: the value, then the remainder drawn as a track.
         var gv = (series[i].values || [0])[0] || 0;
         var gmax = cfg.max || 100;
+        // Arc span in degrees. 180 is the half gauge; 270 reads as a dial and
+        // gives a low value more room to be visibly low; 360 is a ring.
+        var sweep = cfg.sweep || 180;
+        // Rotation places the opening at the bottom whatever the sweep, so the
+        // value always grows clockwise from the lower left.
+        var rot = 270 - (sweep - 180) / 2;
         out.push({ label: series[i].label, data: [gv, Math.max(gmax - gv, 0)],
-          backgroundColor: [c, alpha(c, 0.15)], borderWidth: 0, circumference: 180,
-          rotation: 270, cutout: "72%" });
+          backgroundColor: [c, cfg.trackColor || alpha(c, 0.15)],
+          borderWidth: 0, circumference: sweep, rotation: rot,
+          cutout: (cfg.thickness || 72) + "%" });
       } else if (type === "range-bar") {
         out.push({ label: series[i].label, data: series[i].values, backgroundColor: c,
           borderRadius: 3, borderSkipped: false, maxBarThickness: 26 });
@@ -263,7 +270,7 @@ export const CHARTS_RUNTIME = `
             display: true,
             value: fmtValue((((cfg.series || [])[0] || {}).values || [0])[0] || 0, cfg.valueSuffix),
             label: cfg.gaugeLabel || "",
-            color: tok(el, "--ep-color-text", "#10163e"),
+            color: tok(el, "--ep-color-text", "#0c1b2a"),
             labelColor: tok(el, "--ep-chart-label", "#66738f"),
             font: font, size: 30
           } : { display: false },
@@ -274,7 +281,7 @@ export const CHARTS_RUNTIME = `
                 align: "start", labels: legend(type, font) },
           tooltip: {
             enabled: type !== "gauge",
-            backgroundColor: tok(el, "--ep-chart-tooltip-bg", "#10163e"),
+            backgroundColor: tok(el, "--ep-chart-tooltip-bg", "#0c1b2a"),
             titleColor: tok(el, "--ep-chart-tooltip-text", "#ffffff"),
             bodyColor: tok(el, "--ep-chart-tooltip-text", "#ffffff"),
             titleFont: { size: 12, family: font, weight: "600" },

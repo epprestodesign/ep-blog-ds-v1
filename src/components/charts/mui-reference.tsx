@@ -19,9 +19,9 @@ export function useEpMuiTheme(t: EpTokens | null) {
         () =>
             createTheme({
                 palette: {
-                    text: { primary: t?.text ?? '#10163E', secondary: t?.subtle ?? '#66738F' },
+                    text: { primary: t?.text ?? '#0C1B2A', secondary: t?.subtle ?? '#1B3D5D' },
                     background: { paper: t?.surface ?? '#FFFFFF' },
-                    divider: t?.border ?? '#D2DBE5',
+                    divider: t?.border ?? '#C6CED6',
                 },
                 typography: { fontFamily: t?.fontSans ?? 'Inter, sans-serif' },
             }),
@@ -37,7 +37,7 @@ export function useEpMuiTheme(t: EpTokens | null) {
  */
 export function axisTextStyle(t: EpTokens | null) {
     return {
-        fill: t?.label ?? '#66738F',
+        fill: t?.label ?? '#1B3D5D',
         fontSize: 12,
         fontFamily: t?.fontSans ?? 'Inter, sans-serif',
     }
@@ -45,8 +45,8 @@ export function axisTextStyle(t: EpTokens | null) {
 
 export function chartSx(t: EpTokens | null) {
     return {
-        [`& .${chartsGridClasses.line}`]: { stroke: t?.grid ?? '#D2DBE5', strokeWidth: 1 },
-        [`& .${axisClasses.line}`]: { stroke: t?.grid ?? '#D2DBE5' },
+        [`& .${chartsGridClasses.line}`]: { stroke: t?.grid ?? '#C6CED6', strokeWidth: 1 },
+        [`& .${axisClasses.line}`]: { stroke: t?.grid ?? '#C6CED6' },
         [`& .${axisClasses.tick}`]: { stroke: 'transparent' },
         [`& .${legendClasses.root}`]: { fontFamily: t?.fontSans, fontSize: 12 },
     }

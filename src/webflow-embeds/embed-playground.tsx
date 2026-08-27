@@ -67,7 +67,7 @@ export function EmbedPlayground({ html, title, instructions, mode = 'light' }: E
                 ref={previewRef}
                 data-ep-mode={mode}
                 className="rounded-lg border border-line p-6"
-                style={{ background: mode === 'dark' ? '#10163E' : 'var(--ep-color-surface)' }}
+                style={{ background: mode === 'dark' ? '#09141E' : 'var(--ep-color-surface)' }}
             />
 
             <details className="group rounded-lg border border-line bg-surface-sunken">
